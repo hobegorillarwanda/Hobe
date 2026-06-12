@@ -11,6 +11,8 @@ export interface Destination {
   highlights: string[];
   wildlife: string[];
   imageUrl?: string;
+  longDescription?: string;
+  gallery?: string[];
 }
 
 export interface Package {

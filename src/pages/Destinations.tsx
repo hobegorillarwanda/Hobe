@@ -18,6 +18,7 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
   const [selectedWildlifeFilter, setSelectedWildlifeFilter] = useState<string | null>(null);
   const [selectedHighlightFilter, setSelectedHighlightFilter] = useState<string | null>(null);
   const [activeDetailDest, setActiveDetailDest] = useState<Destination | null>(null);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
 
   // Extract all unique tags for filters
   const allWildlife = Array.from(
@@ -326,10 +327,10 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
 
                   <button
                     id={`btn-dest-explore-${dest.id}`}
-                    onClick={() => setActiveDetailDest(dest)}
+                    onClick={() => { setActiveDetailDest(dest); setActiveGalleryIndex(0); }}
                     className="w-full sm:w-auto py-2.5 px-5 bg-white text-forest-950 hover:bg-sand-100 rounded-xl text-xs uppercase font-extrabold flex items-center justify-center gap-2 transition cursor-pointer"
                   >
-                    <span>Inspect Safety Guide</span>
+                    <span>View Details & Safety Guide</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -407,6 +408,65 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
                       <p className="text-xs text-forest-800 leading-normal mt-0.5 italic">{weather.advice}</p>
                     </div>
                   </div>
+
+                  {/* Interactive photo gallery */}
+                  {activeDetailDest.gallery && activeDetailDest.gallery.length > 0 && (
+                    <div className="space-y-3">
+                      <h4 className="text-xs font-bold text-forest-900 uppercase tracking-widest flex items-center gap-1.5">
+                        <Compass className="w-4 h-4 text-sand-750 stroke-[2.5px]" />
+                        <span>Interactive Wilderness Gallery</span>
+                      </h4>
+                      
+                      {/* Active Preview */}
+                      <div className="w-full h-64 overflow-hidden rounded-2xl relative border border-forest-100 shadow-sm bg-forest-950">
+                        <img 
+                          src={activeDetailDest.gallery[activeGalleryIndex] || activeDetailDest.imageUrl} 
+                          alt={activeDetailDest.name}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover transition-all duration-500"
+                        />
+                        <div className="absolute bottom-3 right-3 text-[9px] font-mono tracking-widest bg-forest-950/80 px-2.5 py-1 rounded text-sand-200 uppercase">
+                          Image {activeGalleryIndex + 1} of {activeDetailDest.gallery.length}
+                        </div>
+                      </div>
+
+                      {/* Thumbnails list */}
+                      <div className="flex gap-2.5 overflow-x-auto pb-1.5 scrollbar-thin scrollbar-thumb-forest-200">
+                        {activeDetailDest.gallery.map((img, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            onClick={() => setActiveGalleryIndex(idx)}
+                            className={`relative w-20 h-14 rounded-lg overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                              activeGalleryIndex === idx 
+                                ? 'border-sand-600 scale-95 shadow-md' 
+                                : 'border-transparent opacity-70 hover:opacity-100'
+                            }`}
+                          >
+                            <img 
+                              src={img} 
+                              alt={`Thumbnail ${idx + 1}`}
+                              referrerPolicy="no-referrer"
+                              className="w-full h-full object-cover"
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Sanctuary Description */}
+                  {activeDetailDest.longDescription && (
+                    <div className="space-y-2 bg-white p-4 rounded-2xl border border-forest-100/50">
+                      <h4 className="text-xs font-bold text-forest-900 uppercase tracking-widest flex items-center gap-1.5">
+                        <Leaf className="w-4 h-4 text-sand-750 stroke-[2.5px]" />
+                        <span>About this Sanctuary</span>
+                      </h4>
+                      <p className="text-xs text-forest-800 leading-relaxed font-light font-sans text-left">
+                        {activeDetailDest.longDescription}
+                      </p>
+                    </div>
+                  )}
 
                   {/* Wildlife check */}
                   <div className="space-y-2.5">

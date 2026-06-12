@@ -9,6 +9,76 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Destination, Package } from '../types';
 import AboutSection from '../components/AboutSection';
 
+interface ShowcaseItem {
+  id: string;
+  name: string;
+  location: string;
+  description: string;
+  imageUrl: string;
+}
+
+const SHOWCASE_WILDLIFE: ShowcaseItem[] = [
+  {
+    id: 'w-gorilla',
+    name: 'Mountain Gorilla Group',
+    location: 'Volcanoes National Park',
+    description: 'The legendary gentle giant primates nesting in high-altitude bamboo mist canopies.',
+    imageUrl: '/assets/images/mountain_gorilla_1781279668251.jpg'
+  },
+  {
+    id: 'w-monkey',
+    name: 'Golden Monkey',
+    location: 'Volcanoes National Park Foothills',
+    description: 'High-energy, rare bamboo-dwelling monkeys covered in dense, striking sunset orange fur.',
+    imageUrl: '/assets/images/golden_monkey_1781279732182.jpg'
+  },
+  {
+    id: 'w-chimp',
+    name: 'Eastern Chimpanzee',
+    location: 'Nyungwe & Gishwati Montane Canopy',
+    description: 'Intelligent, deeply expressive social primate communities swinging in rich tree crowns.',
+    imageUrl: '/assets/images/chimpanzee_nyungwe_1781280491456.jpg'
+  },
+  {
+    id: 'w-elephant',
+    name: 'Savanna Giants (Elephants)',
+    location: 'Akagera National Park',
+    description: 'Ancient, majestic family herds roaming lakeside woodlands alongside zebras and rhinos.',
+    imageUrl: '/assets/images/akagera_safari_1781279684583.jpg'
+  }
+];
+
+const SHOWCASE_PLACES: ShowcaseItem[] = [
+  {
+    id: 'p-canopy',
+    name: 'Nyungwe Canopy Walkway',
+    location: 'Southwestern Rainforest',
+    description: 'A spectacular steel suspension bridge high above ancient dense tree crowns.',
+    imageUrl: '/assets/images/nyungwe_forest_1781279699629.jpg'
+  },
+  {
+    id: 'p-kivu',
+    name: 'Lake Kivu Horizon',
+    location: 'Rubavu & Karongi Coastline',
+    description: 'Speckled volcanic lakeside beaches where traditional three-hulled fishing boats chant at sunset.',
+    imageUrl: '/assets/images/lake_kivu_sunset_1781280461436.jpg'
+  },
+  {
+    id: 'p-twin',
+    name: 'Misty Twin Lakes',
+    location: 'Burera & Ruhondo Hills',
+    description: 'Vibrant volcanic water craters cradled softly under rolling emerald-green terraced farms.',
+    imageUrl: '/assets/images/twin_lakes_rwanda_1781280478382.jpg'
+  },
+  {
+    id: 'p-resort',
+    name: 'Wilderness Eco-Lodge',
+    location: 'Sabyinyo Foothills',
+    description: 'Stunning luxury volcanic stone cottages designed sustainably around mist-covered peaks.',
+    imageUrl: '/assets/images/luxury_lodge_1781279715722.jpg'
+  }
+];
+
 interface HomeProps {
   destinations: Destination[];
   packages: Package[];
@@ -17,6 +87,9 @@ interface HomeProps {
 }
 
 export default function Home({ destinations, packages, onNavigate, onSelectPackage }: HomeProps) {
+  // Showcase Tab State
+  const [showcaseTab, setShowcaseTab] = useState<'wildlife' | 'places'>('wildlife');
+  
   // Primate Safari Finder Quiz States
   const [quizStep, setQuizStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -258,6 +331,107 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
 
       {/* 2. CANOPY ABOUT SECTION */}
       <AboutSection onNavigate={onNavigate} />
+
+      {/* EXEXCLUSIVE WILDLIFE & LANDSCAPE PORTFOLIO SHOWCASE */}
+      <section className="py-24 bg-forest-950 text-white relative overflow-hidden">
+        {/* Ambient atmospheric highlights */}
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-sand-700/5 rounded-full blur-3xl -translate-x-1/2 -to-y-1/2 pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-120 h-120 bg-forest-800/25 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10 space-y-16">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div className="space-y-4 max-w-xl text-left">
+              <span className="text-xs font-bold tracking-widest text-sand-200 uppercase bg-forest-900 px-3.5 py-1.5 rounded-full border border-forest-800 inline-block font-mono">
+                The Rwanda Portfolio
+              </span>
+              <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">
+                Scenic Wonders & <br/>
+                <span className="text-sand-100 font-serif italic">Wild Sanctuary</span>
+              </h2>
+              <p className="text-xs text-forest-200 font-light leading-relaxed">
+                Peer inside the incredible biological diversity of Rwanda. Witness ancient high-altitude primates alongside breathtaking fresh volcanic water basins and savanna wetlands.
+              </p>
+            </div>
+
+            {/* Premium Tab Toggles */}
+            <div className="flex bg-forest-900 border border-forest-800/80 p-1.5 rounded-2xl w-fit self-start">
+              <button
+                type="button"
+                onClick={() => setShowcaseTab('wildlife')}
+                className={`py-2 px-5 rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer ${
+                  showcaseTab === 'wildlife' 
+                    ? 'bg-sand-600 text-forest-950 shadow-sm' 
+                    : 'text-forest-200 hover:text-white'
+                }`}
+              >
+                Rare Wildlife
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowcaseTab('places')}
+                className={`py-2 px-5 rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer ${
+                  showcaseTab === 'places' 
+                    ? 'bg-sand-600 text-forest-950 shadow-sm' 
+                    : 'text-forest-200 hover:text-white'
+                }`}
+              >
+                Sacred Places
+              </button>
+            </div>
+          </div>
+
+          {/* Grid Layout of the Tab Items */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <AnimatePresence mode="wait">
+              {(showcaseTab === 'wildlife' ? SHOWCASE_WILDLIFE : SHOWCASE_PLACES).map((item) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.4 }}
+                  className="group relative bg-forest-900/45 border border-forest-800/60 rounded-3xl overflow-hidden shadow-luxury flex flex-col justify-between h-[420px]"
+                >
+                  {/* Photo Layer */}
+                  <div className="h-60 overflow-hidden relative">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/20 to-transparent"></div>
+                    <span className="absolute bottom-3 left-4 text-[10px] font-mono tracking-wider font-bold text-sand-300 uppercase bg-forest-950/70 py-1 px-2.5 rounded backdrop-blur-sm border border-white/5">
+                      {item.location}
+                    </span>
+                  </div>
+
+                  {/* Text Details Layer */}
+                  <div className="p-5 flex-1 flex flex-col justify-between text-left">
+                    <div className="space-y-1.5">
+                      <h4 className="font-serif text-lg font-bold text-sand-100 group-hover:text-sand-50 transition-colors">
+                        {item.name}
+                      </h4>
+                      <p className="text-xs text-forest-200 font-light leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+                    
+                    <button
+                      type="button"
+                      onClick={() => onNavigate('destinations')}
+                      className="text-[10px] font-mono tracking-widest font-bold text-sand-400 hover:text-white uppercase flex items-center gap-1.5 transition-colors self-start cursor-pointer mt-3"
+                    >
+                      <span>Explore Region</span>
+                      <span>&rarr;</span>
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+      </section>
 
       {/* 3. DYNAMIC INTERACTIVE SAFARI MATCHING QUIZ */}
       <section className="py-24 bg-forest-50/50 border-y border-forest-100/50 px-6">
