@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { Compass, Search, Tag, Eye, CloudRain, Sun, Leaf, HelpCircle, X, Check, MapPin, TreePine, ArrowRight } from 'lucide-react';
+import { Compass, Search, Tag, Eye, CloudRain, Sun, Leaf, HelpCircle, X, Check, MapPin, TreePine, ArrowRight, ChevronDown } from 'lucide-react';
 import { Destination } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -174,76 +174,58 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
           />
         </div>
 
-        {/* Categories Chips */}
-        <div className="space-y-4">
+        {/* Categories select dropdowns */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-forest-50/50">
           
-          {/* Wildlife Filter Categories */}
+          {/* Wildlife Filter Select */}
           <div className="space-y-2">
-            <h4 className="text-[10px] font-bold text-forest-800 uppercase tracking-widest flex items-center gap-1.5">
-              <Tag className="w-3.5 h-3.5" />
+            <label htmlFor="filter-wildlife-select" className="text-[10px] font-bold text-forest-800 uppercase tracking-widest flex items-center gap-1.5 font-mono">
+              <Tag className="w-3.5 h-3.5 text-sand-700" />
               <span>Filter by Key Wildlife Species</span>
-            </h4>
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                id="filter-wildlife-all"
-                onClick={() => setSelectedWildlifeFilter(null)}
-                className={`py-1.5 px-3 rounded-xl text-xs font-medium cursor-pointer transition ${
-                  !selectedWildlifeFilter 
-                    ? 'bg-forest-750 text-white font-semibold' 
-                    : 'bg-sand-50 hover:bg-forest-50/60 border border-forest-100/50 text-forest-750'
-                }`}
+            </label>
+            <div className="relative">
+              <select
+                id="filter-wildlife-select"
+                value={selectedWildlifeFilter || ''}
+                onChange={(e) => setSelectedWildlifeFilter(e.target.value || null)}
+                className="w-full pl-4 pr-10 py-3 bg-sand-50/30 border border-forest-150 rounded-2xl text-xs font-semibold text-forest-900 focus:outline-none focus:ring-2 focus:ring-forest-600 transition appearance-none cursor-pointer"
               >
-                All Wildlife
-              </button>
-              {allWildlife.map((w, idx) => (
-                <button
-                  id={`filter-wildlife-${idx}`}
-                  key={idx}
-                  onClick={() => setSelectedWildlifeFilter(w)}
-                  className={`py-1.5 px-3 rounded-xl text-xs font-medium cursor-pointer transition ${
-                    selectedWildlifeFilter === w 
-                      ? 'bg-forest-750 text-white font-semibold' 
-                      : 'bg-sand-50 hover:bg-forest-50/60 border border-forest-100/50 text-forest-750'
-                  }`}
-                >
-                  {w}
-                </button>
-              ))}
+                <option value="">All Key Wildlife Species</option>
+                {allWildlife.map((w, idx) => (
+                  <option key={idx} value={w}>
+                    {w}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-forest-650">
+                <ChevronDown className="w-4 h-4" />
+              </div>
             </div>
           </div>
 
-          {/* Highlights Filter Categories */}
-          <div className="space-y-2 pt-2 border-t border-forest-50/80">
-            <h4 className="text-[10px] font-bold text-forest-800 uppercase tracking-widest flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5" />
+          {/* Highlights Filter Select */}
+          <div className="space-y-2">
+            <label htmlFor="filter-highlight-select" className="text-[10px] font-bold text-forest-800 uppercase tracking-widest flex items-center gap-1.5 font-mono">
+              <Compass className="w-3.5 h-3.5 text-sand-700" />
               <span>Filter by Experience Highlight</span>
-            </h4>
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                id="filter-highlight-all"
-                onClick={() => setSelectedHighlightFilter(null)}
-                className={`py-1.5 px-3 rounded-xl text-xs font-medium cursor-pointer transition ${
-                  !selectedHighlightFilter 
-                    ? 'bg-forest-750 text-white font-semibold' 
-                    : 'bg-sand-50 hover:bg-forest-50/60 border border-forest-100/50 text-forest-750'
-                }`}
+            </label>
+            <div className="relative">
+              <select
+                id="filter-highlight-select"
+                value={selectedHighlightFilter || ''}
+                onChange={(e) => setSelectedHighlightFilter(e.target.value || null)}
+                className="w-full pl-4 pr-10 py-3 bg-sand-50/30 border border-forest-150 rounded-2xl text-xs font-semibold text-forest-900 focus:outline-none focus:ring-2 focus:ring-forest-600 transition appearance-none cursor-pointer"
               >
-                All Highlights
-              </button>
-              {allHighlights.map((hl, idx) => (
-                <button
-                  id={`filter-highlight-${idx}`}
-                  key={idx}
-                  onClick={() => setSelectedHighlightFilter(hl)}
-                  className={`py-1.5 px-3 rounded-xl text-xs font-medium cursor-pointer transition ${
-                    selectedHighlightFilter === hl 
-                      ? 'bg-forest-750 text-white font-semibold' 
-                      : 'bg-sand-50 hover:bg-forest-50/60 border border-forest-100/50 text-forest-750'
-                  }`}
-                >
-                  {hl}
-                </button>
-              ))}
+                <option value="">All Experience Highlights</option>
+                {allHighlights.map((hl, idx) => (
+                  <option key={idx} value={hl}>
+                    {hl}
+                  </option>
+                ))}
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-forest-650">
+                <ChevronDown className="w-4 h-4" />
+              </div>
             </div>
           </div>
 
