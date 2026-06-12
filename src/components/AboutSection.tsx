@@ -55,6 +55,19 @@ export default function AboutSection({ onNavigate }: AboutSectionProps) {
               </div>
             </div>
 
+            {/* Premium Partner Eco-Lodge Image */}
+            <div className="w-full h-40 overflow-hidden rounded-xl border border-forest-800 shadow-lg relative">
+              <img 
+                src="/src/assets/images/luxury_lodge_1781279715722.jpg" 
+                alt="Luxury Eco-Lodge Rwanda" 
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover brightness-95"
+              />
+              <span className="absolute bottom-2.5 right-2.5 text-[9px] font-mono tracking-widest font-bold uppercase bg-forest-950/80 px-2.5 py-1 rounded text-sand-200 border border-forest-800/40 backdrop-blur-sm">
+                Partner Eco-Lodge
+              </span>
+            </div>
+
             <div className="p-4 bg-forest-800/50 rounded-xl border border-forest-700/50 space-y-2">
               <div className="flex items-center gap-2 text-xs text-sand-200 font-bold tracking-wider uppercase">
                 <MapPin className="w-4 h-4" />

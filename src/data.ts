@@ -31,7 +31,8 @@ export const SEED_DESTINATIONS: Destination[] = [
       'Buffaloes',
       'Forest Elephants',
       'Rare Bird Species'
-    ]
+    ],
+    imageUrl: '/src/assets/images/mountain_gorilla_1781279668251.jpg'
   },
   {
     id: 'akagera-np',
@@ -53,7 +54,8 @@ export const SEED_DESTINATIONS: Destination[] = [
       'Giraffes',
       'Zebras',
       'Hippos'
-    ]
+    ],
+    imageUrl: '/src/assets/images/akagera_safari_1781279684583.jpg'
   },
   {
     id: 'nyungwe-np',
@@ -71,7 +73,8 @@ export const SEED_DESTINATIONS: Destination[] = [
       'L\'Hoest\'s Monkeys',
       'Black and White Colobus Monkeys',
       'Over 300 Bird Species'
-    ]
+    ],
+    imageUrl: '/src/assets/images/nyungwe_forest_1781279699629.jpg'
   },
   {
     id: 'gishwati-mukura',
@@ -88,7 +91,8 @@ export const SEED_DESTINATIONS: Destination[] = [
       'Golden Monkeys',
       'Blue Monkeys',
       'East African Golden Cats'
-    ]
+    ],
+    imageUrl: '/src/assets/images/golden_monkey_1781279732182.jpg'
   }
 ];
 
@@ -106,7 +110,8 @@ export const SEED_PACKAGES: Package[] = [
       'Round-trip Transport from Kigali',
       'Lunch and Bottled Water',
       'Experienced Park Ranger Guide'
-    ]
+    ],
+    imageUrl: '/src/assets/images/mountain_gorilla_1781279668251.jpg'
   },
   {
     id: 'pkg-mid-range-adventurer',
@@ -122,7 +127,8 @@ export const SEED_PACKAGES: Package[] = [
       'Private Transport',
       'Cultural Village Experience Tour',
       'Local Expert Guide'
-    ]
+    ],
+    imageUrl: '/src/assets/images/akagera_safari_1781279684583.jpg'
   },
   {
     id: 'pkg-luxury-safari',
@@ -138,7 +144,8 @@ export const SEED_PACKAGES: Package[] = [
       'Private Luxury 4x4 Safari Vehicle',
       'Dedicated Private Tour Guide',
       'Spa Access & Wellness Amenities'
-    ]
+    ],
+    imageUrl: '/src/assets/images/luxury_lodge_1781279715722.jpg'
   }
 ];
 

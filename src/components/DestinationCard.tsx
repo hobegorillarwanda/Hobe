@@ -44,9 +44,23 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
   return (
     <div 
       id={`destination-${destination.id}`}
-      className={`rounded-2xl overflow-hidden shadow-luxury shadow-luxury-hover border border-forest-100 flex flex-col h-full bg-gradient-to-br ${getGradientTheme(destination.id)} text-white p-6 justify-between transition-all`}
+      className={`rounded-2xl overflow-hidden shadow-luxury shadow-luxury-hover border border-forest-100 flex flex-col h-full bg-gradient-to-br ${getGradientTheme(destination.id)} text-white p-6 justify-between transition-all relative group`}
     >
-      <div className="space-y-6">
+      {/* Background Image layer with subtle movement on group hover */}
+      {destination.imageUrl && (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
+          <img 
+            src={destination.imageUrl} 
+            alt={destination.name}
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover opacity-35 mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
+          />
+          {/* Subtle vignette shade */}
+          <div className="absolute inset-0 bg-gradient-to-t from-forest-950/70 via-transparent to-transparent"></div>
+        </div>
+      )}
+
+      <div className="space-y-6 relative z-10">
         {/* Header containing name & icon badge */}
         <div className="flex justify-between items-start">
           <div className="p-3 bg-white/10 rounded-xl backdrop-blur-md border border-white/15">
@@ -91,7 +105,7 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
 
       {/* Wildlife tracking highlights */}
       {destination.wildlife && destination.wildlife.length > 0 && (
-        <div className="mt-6 pt-4 border-t border-white/10 space-y-2">
+        <div className="mt-6 pt-4 border-t border-white/10 space-y-2 relative z-10">
           <h4 className="text-xs font-bold text-sand-200 uppercase tracking-widest flex items-center gap-1.5">
             <Tag className="w-3.5 h-3.5" />
             <span>Primary Wildlife</span>

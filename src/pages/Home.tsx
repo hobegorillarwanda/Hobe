@@ -159,7 +159,16 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
       
       {/* 1. HERO HEADER */}
       <header className="relative bg-forest-900 text-white min-h-[90vh] flex items-center justify-center px-6 py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-900/80 to-transparent z-10"></div>
+        {/* Real Mountain Gorilla Background Image */}
+        <div className="absolute inset-0 z-0 select-none pointer-events-none">
+          <img 
+            src="/src/assets/images/mountain_gorilla_1781279668251.jpg" 
+            alt="Majestic Mountain Gorilla" 
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover opacity-25 object-center mix-blend-luminosity brightness-90 animate-pulse duration-10000"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-900/85 to-forest-950/50 z-10"></div>
         {/* Decorative ambient blur elements */}
         <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-forest-750/30 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-1/4 right-1/10 w-120 h-120 bg-sand-700/10 rounded-full blur-3xl pointer-events-none"></div>

@@ -10,6 +10,7 @@ export interface Destination {
   description: string;
   highlights: string[];
   wildlife: string[];
+  imageUrl?: string;
 }
 
 export interface Package {
@@ -20,6 +21,7 @@ export interface Package {
   baselineCost: number;
   description: string;
   inclusions: string[];
+  imageUrl?: string;
 }
 
 export interface Booking {

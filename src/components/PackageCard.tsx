@@ -65,6 +65,17 @@ export default function PackageCard({ pkg, onSelect, isSelected = false }: Packa
       )}
 
       <div className="space-y-6">
+        {pkg.imageUrl && (
+          <div className="w-full h-44 overflow-hidden rounded-2xl relative border border-forest-500/10 shadow-sm">
+            <img 
+              src={pkg.imageUrl} 
+              alt={pkg.title}
+              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+            />
+          </div>
+        )}
+
         {/* Package Header Row */}
         <div className="flex justify-between items-start gap-4">
           <div>
