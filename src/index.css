@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, Cambria, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-forest-50: #f2f7f4;
+  --color-forest-100: #e2ede7;
+  --color-forest-200: #c5dcce;
+  --color-forest-600: #2c5e43;
+  --color-forest-700: #1f4530;
+  --color-forest-800: #183525;
+  --color-forest-900: #0f2419;
+
+  --color-sand-50: #fbf9f4;
+  --color-sand-100: #f4edd9;
+  --color-sand-200: #e8dcb9;
+  --color-sand-600: #b59453;
+  --color-sand-700: #94743b;
+  --color-sand-800: #7c5f32;
+}
+
+body {
+  background-color: var(--color-sand-50);
+  color: var(--color-forest-900);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Luxury card shadow */
+.shadow-luxury {
+  box-shadow: 0 10px 30px -15px rgba(24, 53, 37, 0.12), 0 4px 6px -2px rgba(24, 53, 37, 0.04);
+}
+
+.shadow-luxury-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.shadow-luxury-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -20px rgba(24, 53, 37, 0.20), 0 10px 15px -5px rgba(24, 53, 37, 0.08);
+}

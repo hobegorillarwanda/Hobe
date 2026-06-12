@@ -1,0 +1,144 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account information, tracking authorization role.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["customer", "admin"]
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["email", "role"]
+    },
+    "Destination": {
+      "title": "Destination",
+      "description": "A national park or travel region with wildlife highlights and activities.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "highlights": {
+          "type": "array"
+        },
+        "wildlife": {
+          "type": "array"
+        }
+      },
+      "required": ["id", "name", "location", "description"]
+    },
+    "Package": {
+      "title": "Tour Package",
+      "description": "Safari package tier (Budget, Mid-Range, Luxury) with inclusions.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "tier": {
+          "type": "string",
+          "enum": ["budget", "mid-range", "luxury"]
+        },
+        "baselineCost": {
+          "type": "number"
+        },
+        "description": {
+          "type": "string"
+        },
+        "inclusions": {
+          "type": "array"
+        }
+      },
+      "required": ["id", "title", "duration", "tier", "baselineCost", "description"]
+    },
+    "Booking": {
+      "title": "Booking Request",
+      "description": "Safari tour booking reservation containing contact details, passengers, dates, and live status.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "travelDate": {
+          "type": "string"
+        },
+        "passengerCount": {
+          "type": "number"
+        },
+        "specialRequests": {
+          "type": "string"
+        },
+        "packageId": {
+          "type": "string"
+        },
+        "packageName": {
+          "type": "string"
+        },
+        "totalCost": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Pending", "Confirmed", "Cancelled"]
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "userId", "fullName", "email", "phone", "travelDate", "passengerCount", "packageId", "packageName", "totalCost", "status", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Stores user registration profiles and role definitions."
+    },
+    "destinations/{destinationId}": {
+      "schema": "Destination",
+      "description": "Stores the national parks and destination content managed dynamically by admins."
+    },
+    "packages/{packageId}": {
+      "schema": "Package",
+      "description": "Stores tour package details, pricing tiers, and descriptions."
+    },
+    "bookings/{bookingId}": {
+      "schema": "Booking",
+      "description": "Stores client booking orders, linked to user IDs."
+    }
+  }
+}

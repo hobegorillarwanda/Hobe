@@ -1,0 +1,6 @@
+{
+  "name": "Hobe Gorilla Rwanda",
+  "description": "Dynamic tourism and booking web application for sustainable gorilla tracking and wildlife eco-safaris in Rwanda.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

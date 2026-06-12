@@ -1,0 +1,158 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net (Pillar 1)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Core Primitives & Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && (request.auth.token.email_verified == true || request.auth.token.email == "hobegorillarwanda@gmail.com");
+    }
+
+    // Role lookup: Check user collection role, or check if they are the verified bootstrapped admin
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "hobegorillarwanda@gmail.com" || 
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin")
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches("^[a-zA-Z0-9_\\\\-]+$");
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Entity Validations ---
+
+    function isValidUser(data) {
+      return data.keys().hasAll(["email", "role", "createdAt"]) &&
+             data.keys().size() == 3 &&
+             data.email is string && data.email.size() <= 128 &&
+             data.role is string && (data.role == "customer" || data.role == "admin") &&
+             data.createdAt is string && data.createdAt.size() <= 32;
+    }
+
+    function isValidDestination(data) {
+      return data.keys().hasAll(["id", "name", "location", "description", "highlights", "wildlife"]) &&
+             data.keys().size() == 6 &&
+             data.id is string && data.id.size() <= 64 &&
+             data.name is string && data.name.size() <= 128 &&
+             data.location is string && data.location.size() <= 128 &&
+             data.description is string && data.description.size() <= 1000 &&
+             data.highlights is list && data.highlights.size() <= 20 &&
+             data.wildlife is list && data.wildlife.size() <= 20;
+    }
+
+    function isValidPackage(data) {
+      return data.keys().hasAll(["id", "title", "duration", "tier", "baselineCost", "description", "inclusions"]) &&
+             data.keys().size() == 7 &&
+             data.id is string && data.id.size() <= 64 &&
+             data.title is string && data.title.size() <= 128 &&
+             data.duration is string && data.duration.size() <= 32 &&
+             data.tier is string && (data.tier == "budget" || data.tier == "mid-range" || data.tier == "luxury") &&
+             (data.baselineCost is int || data.baselineCost is float) && data.baselineCost >= 0 &&
+             data.description is string && data.description.size() <= 1000 &&
+             data.inclusions is list && data.inclusions.size() <= 20;
+    }
+
+    function isValidBooking(data) {
+      return data.keys().hasAll(["id", "userId", "fullName", "email", "phone", "travelDate", "passengerCount", "specialRequests", "packageId", "packageName", "totalCost", "status", "createdAt"]) &&
+             data.keys().size() == 13 &&
+             data.id is string && data.id.size() <= 64 &&
+             data.userId is string && data.userId.size() <= 128 &&
+             data.fullName is string && data.fullName.size() <= 128 &&
+             data.email is string && data.email.size() <= 128 &&
+             data.phone is string && data.phone.size() <= 32 &&
+             data.travelDate is string && data.travelDate.size() <= 16 &&
+             data.passengerCount is int && data.passengerCount > 0 && data.passengerCount <= 100 &&
+             data.specialRequests is string && data.specialRequests.size() <= 2000 &&
+             data.packageId is string && data.packageId.size() <= 64 &&
+             data.packageName is string && data.packageName.size() <= 128 &&
+             (data.totalCost is int || data.totalCost is float) && data.totalCost >= 0 &&
+             data.status is string && (data.status == "Pending" || data.status == "Confirmed" || data.status == "Cancelled") &&
+             data.createdAt is string && data.createdAt.size() <= 32;
+    }
+
+    // --- Rules for Users ---
+    match /users/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      
+      allow create: if isSignedIn() &&
+                       isValidId(userId) &&
+                       request.auth.uid == userId &&
+                       isValidUser(incoming()) &&
+                       (incoming().role == "customer" || request.auth.token.email == "hobegorillarwanda@gmail.com");
+
+      allow update: if isSignedIn() &&
+                       request.auth.uid == userId &&
+                       isValidUser(incoming()) &&
+                       incoming().role == existing().role; // Users can't self-elevate role
+                       
+      allow delete: if isAdmin();
+    }
+
+    // --- Rules for Destinations ---
+    match /destinations/{destinationId} {
+      allow read: if true; // Publicly readable by guests and customers
+      
+      allow write: if isAdmin() &&
+                      isValidId(destinationId) &&
+                      (request.method == "delete" || isValidDestination(incoming()));
+    }
+
+    // --- Rules for Packages ---
+    match /packages/{packageId} {
+      allow read: if true; // Publicly readable by guests and customers
+      
+      allow write: if isAdmin() &&
+                      isValidId(packageId) &&
+                      (request.method == "delete" || isValidPackage(incoming()));
+    }
+
+    // --- Rules for Bookings ---
+    match /bookings/{bookingId} {
+      // Secure listing enforces that customers only see their own bookings unless they are Admin (Pillar 8)
+      allow list: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
+      allow get: if isSignedIn() && (isAdmin() || resource.data.userId == request.auth.uid);
+
+      allow create: if isVerifiedUser() &&
+                       isValidId(bookingId) &&
+                       isValidBooking(incoming()) &&
+                       incoming().userId == request.auth.uid &&
+                       incoming().status == "Pending" &&
+                       // Relational validation: ensure package exists (Pillar 11)
+                       exists(/databases/$(database)/documents/packages/$(incoming().packageId));
+
+      allow update: if isSignedIn() && (
+        // Option A: Admin can confirm or cancel (Pillar 4 Actions)
+        (isAdmin() && isValidBooking(incoming())) ||
+        // Option B: Customer can update details but NOT status or price
+        (isVerifiedUser() &&
+         incoming().userId == request.auth.uid &&
+         isValidBooking(incoming()) &&
+         incoming().status == existing().status &&
+         incoming().totalCost == existing().totalCost &&
+         incoming().packageId == existing().packageId &&
+         incoming().createdAt == existing().createdAt)
+      );
+
+      allow delete: if isAdmin();
+    }
+  }
+}
