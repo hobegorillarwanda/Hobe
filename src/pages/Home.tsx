@@ -203,7 +203,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
       </header>
 
       {/* 2. CANOPY ABOUT SECTION */}
-      <AboutSection />
+      <AboutSection onNavigate={onNavigate} />
 
       {/* 3. DYNAMIC INTERACTIVE SAFARI MATCHING QUIZ */}
       <section className="py-24 bg-forest-50/50 border-y border-forest-100/50 px-6">

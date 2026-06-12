@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Package, Booking } from '../types';
 import { bookingService, AuthUser } from '../services';
-import { User, Phone, Mail, Calendar, Users, FileText, ChevronLeft, ChevronRight, HelpCircle, HardHat, Compass, Sparkles, Check, CheckCircle2 } from 'lucide-react';
+import { User, Phone, Mail, Calendar, Users, FileText, ChevronLeft, ChevronRight, HelpCircle, HardHat, Compass, Sparkles, Check, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import AuthModal from '../components/AuthModal';
 
@@ -198,8 +198,9 @@ export default function BookingPage({
       <div className="bg-white rounded-3xl border border-forest-100 shadow-luxury p-6 md:p-10 text-left">
         
         {error && (
-          <div className="p-4 mb-6 bg-red-50 border border-red-100 rounded-2xl text-xs text-red-700 font-medium">
-            ⚠️ {error}
+          <div className="p-4 mb-6 bg-red-50 border border-red-100 rounded-2xl text-xs text-red-700 font-medium flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-700 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
 
@@ -463,7 +464,10 @@ export default function BookingPage({
             {/* Authentications alerts */}
             {!currentUser && (
               <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-light text-amber-900">
-                <p>⚠️ Tracking registration requires a secured profile mapping. Authenticate now to submit reservations directly with Rwanda Development parks.</p>
+                <div className="flex items-start gap-2.5">
+                  <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+                  <p>Tracking registration requires a secured profile mapping. Authenticate now to submit reservations directly with Rwanda Development parks.</p>
+                </div>
                 <button
                   type="button"
                   onClick={onTriggerAuth}

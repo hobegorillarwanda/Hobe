@@ -65,7 +65,7 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
       case 'akagera-np':
         return 'from-forest-900 via-forest-800 to-sand-800';
       case 'nyungwe-np':
-        return 'from-forest-800 via-forest-900 to-forest-955';
+        return 'from-forest-800 via-forest-900 to-forest-950';
       default:
         return 'from-forest-850 to-forest-900';
     }
@@ -416,8 +416,9 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
                       {activeDetailDest.wildlife.map((w, idx) => (
-                        <span key={idx} className="text-xs bg-forest-50 hover:bg-forest-100 text-forest-850 px-3 py-1 rounded-xl border border-forest-100/80 font-medium cursor-default">
-                          🐆 {w}
+                        <span key={idx} className="text-xs bg-forest-50 hover:bg-forest-100 text-forest-850 px-3 py-1 rounded-xl border border-forest-100/80 font-medium cursor-default flex items-center gap-1.5">
+                          <Leaf className="w-3.5 h-3.5 text-forest-700 shrink-0" />
+                          <span>{w}</span>
                         </span>
                       ))}
                     </div>

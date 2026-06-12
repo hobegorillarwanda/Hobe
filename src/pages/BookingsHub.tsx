@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { Booking } from '../types';
 import { bookingService, AuthUser } from '../services';
-import { Compass, HelpCircle, Check, MapPin, Printer, ShieldCheck, Heart, User, Calendar, FileText, CheckSquare, Square, RefreshCw, X } from 'lucide-react';
+import { Compass, HelpCircle, Check, MapPin, Printer, ShieldCheck, Heart, User, Calendar, FileText, CheckSquare, Square, RefreshCw, X, Clock, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface BookingsHubProps {
@@ -203,11 +203,19 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
 
                       {/* Actions */}
                       <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <p className="text-[10px] text-forest-600 leading-normal font-light">
-                          {isConfirmed 
-                            ? '✓ Official tracking licenses are mapped and ready at base camp.' 
-                            : '⚡ Application pending. RDB registry clearing completes in under 24 hours.'}
-                        </p>
+                        <div className="flex items-center gap-1.5 text-[10px] text-forest-600">
+                          {isConfirmed ? (
+                            <>
+                              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                              <span className="font-light">Official tracking licenses are mapped and ready at base camp.</span>
+                            </>
+                          ) : (
+                            <>
+                              <Clock className="w-4 h-4 text-amber-600 shrink-0 animate-pulse" />
+                              <span className="font-light">Application pending. RDB registry clearing completes in under 24 hours.</span>
+                            </>
+                          )}
+                        </div>
                         <button
                           id={`btn-hub-cert-${booking.id}`}
                           onClick={() => setActiveTicket(booking)}

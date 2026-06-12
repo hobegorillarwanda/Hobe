@@ -6,7 +6,11 @@
 import { SIGNATURE_ITINERARY, SEED_METADATA } from '../data';
 import { Compass, Leaf, Heart, MapPin, Milestone } from 'lucide-react';
 
-export default function AboutSection() {
+interface AboutSectionProps {
+  onNavigate: (view: 'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin') => void;
+}
+
+export default function AboutSection({ onNavigate }: AboutSectionProps) {
   return (
     <section id="about" className="py-20 bg-forest-900 text-white relative overflow-hidden">
       {/* Decorative backdrop details */}
@@ -20,7 +24,7 @@ export default function AboutSection() {
             <span className="text-xs font-bold tracking-widest text-sand-200 uppercase bg-forest-800/80 px-3.5 py-1.5 rounded-full border border-forest-700/60 inline-block">
               Our Sanctum
             </span>
-            <h2 className="font-serif text-4xl lg:text-5xl font-bold tracking-tight text-sans-100 leading-tight">
+            <h2 className="font-serif text-4xl lg:text-5xl font-bold tracking-tight text-sand-50 leading-tight">
               A Gate to the <br/>
               <span className="text-sand-100 font-serif italic">Heart of Rwanda</span>
             </h2>
@@ -103,12 +107,12 @@ export default function AboutSection() {
                 <Heart className="w-4 h-4 text-sand-600 fill-sand-600 animate-pulse" />
                 <span>Private Customized Itineraries Available</span>
               </div>
-              <a 
-                href="#booking-anchor" 
-                className="text-xs text-sand-200 hover:text-white font-bold underline uppercase tracking-widest transition"
+              <button 
+                onClick={() => onNavigate('booking')}
+                className="text-xs text-sand-200 hover:text-white font-bold underline uppercase tracking-widest transition cursor-pointer text-left"
               >
                 Request Custom Quotation &rarr;
-              </a>
+              </button>
             </div>
           </div>
         </div>

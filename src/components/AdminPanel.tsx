@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { Destination, Package, Booking } from '../types';
 import { AuthUser, destinationService, packageService, bookingService } from '../services';
-import { ShieldCheck, Database, Layers, ClipboardList, PenTool, Plus, Trash2, Edit2, CheckCircle2, XCircle, Clock, Tag, RefreshCw } from 'lucide-react';
+import { ShieldCheck, Database, Layers, ClipboardList, PenTool, Plus, Trash2, Edit2, CheckCircle2, XCircle, Clock, Tag, RefreshCw, Lock, MessageSquare } from 'lucide-react';
 
 interface AdminPanelProps {
   currentUser: AuthUser | null;
@@ -54,8 +54,9 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
             This module is protected by a client-side role guard. You must be authenticated using the verified coordinator account to make database mutations.
           </p>
         </div>
-        <div className="bg-sand-100 p-4 rounded-xl text-xs text-forest-850 font-medium">
-          🔒 Sign in with <span className="font-mono bg-white px-2 py-0.5 rounded border border-forest-200">hobegorillarwanda@gmail.com</span> to authorize.
+        <div className="bg-sand-100 p-4 rounded-xl text-xs text-forest-850 font-medium flex items-center justify-center gap-2">
+          <Lock className="w-4 h-4 text-forest-750 shrink-0" />
+          <span>Sign in with <span className="font-mono bg-white px-2 py-0.5 rounded border border-forest-200">hobegorillarwanda@gmail.com</span> to authorize.</span>
         </div>
       </div>
     );
@@ -318,8 +319,9 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
                         <p className="font-bold text-forest-950">{b.fullName}</p>
                         <p className="text-[10px] text-forest-650">{b.email} | {b.phone}</p>
                         {b.specialRequests && (
-                          <div className="bg-sand-100 p-2 rounded-lg border border-forest-100 text-[9px] mt-1 max-w-xs italic text-forest-800">
-                            💬 "{b.specialRequests}"
+                          <div className="bg-sand-100 p-2 rounded-lg border border-forest-100 text-[9px] mt-1 max-w-xs text-forest-800 flex items-start gap-1.5">
+                            <MessageSquare className="w-3 h-3 text-sand-700 shrink-0 mt-0.5" />
+                            <span className="italic">"{b.specialRequests}"</span>
                           </div>
                         )}
                       </td>

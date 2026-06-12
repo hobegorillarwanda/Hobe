@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { Shield, Sparkles, Heart, HelpCircle, Check, MapPin, Award, TreePine } from 'lucide-react';
+import { Shield, Sparkles, Heart, HelpCircle, Check, MapPin, Award, TreePine, Ruler, HeartPulse, Users, Clock, Camera, TrendingUp, Coins, ShieldAlert } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface ConservationProps {
@@ -20,34 +20,53 @@ export default function Conservation({ onNavigate }: ConservationProps) {
     {
       title: 'Maintain strict 7-Meter (21 ft) Distance',
       description: 'Protects wild gorillas from feeling cornered and prevents cross-infection of human respiratory pathorgens.',
-      icon: '📏'
+      icon: 'distance'
     },
     {
       title: 'KN95 Protective Masks are Mandatory',
       description: 'Because humans and mountain gorillas share 98% DNA, gorillas are susceptible to COVID-19, colds, and flu.',
-      icon: '😷'
+      icon: 'mask'
     },
     {
       title: 'Maximum 8 Persons Per Gorilla Family',
       description: 'Limits environmental compression on the forest path and avoids overstimulating family silverbacks.',
-      icon: '👥'
+      icon: 'group'
     },
     {
       title: 'Strict Hour-Long Observation Limit',
       description: 'Once contact is made, clients are capped at exactly 60 minutes of observation time to prevent modifying animal behavior.',
-      icon: '⏱'
+      icon: 'time'
     },
     {
       title: 'No Flash Photography Allowed',
       description: 'Flashes are strictly prohibited. The bright light can register as a threat or startle silverbacks, leading to defense behavior.',
-      icon: '📸'
+      icon: 'camera'
     },
     {
       title: 'Stay Calm If a Gorilla Charges',
       description: 'Never run. Crouch low, lower your eyes, avoid direct eye contact, and let the experienced rangers vocalize reassurance.',
-      icon: '🦍'
+      icon: 'charge'
     }
   ];
+
+  const getRuleIcon = (iconKey: string) => {
+    switch (iconKey) {
+      case 'distance':
+        return <Ruler className="w-5 h-5 text-forest-700" />;
+      case 'mask':
+        return <HeartPulse className="w-5 h-5 text-forest-700" />;
+      case 'group':
+        return <Users className="w-5 h-5 text-forest-700" />;
+      case 'time':
+        return <Clock className="w-5 h-5 text-forest-700" />;
+      case 'camera':
+        return <Camera className="w-5 h-5 text-forest-700" />;
+      case 'charge':
+        return <ShieldAlert className="w-5 h-5 text-forest-700" />;
+      default:
+        return <HelpCircle className="w-5 h-5 text-forest-700" />;
+    }
+  };
 
   // Population history data points
   const gorillaPopHistory = [
@@ -209,8 +228,8 @@ export default function Conservation({ onNavigate }: ConservationProps) {
                   key={idx}
                   className="bg-white p-6 rounded-3xl border border-forest-100 shadow-luxury space-y-3 relative overflow-hidden"
                 >
-                  <div className="absolute top-0 right-0 w-12 h-12 bg-forest-50/50 rounded-bl-3xl flex items-center justify-center text-lg pointer-events-none">
-                    {rule.icon}
+                  <div className="absolute top-3 right-3 w-10 h-10 bg-forest-50 border border-forest-100 rounded-2xl flex items-center justify-center pointer-events-none">
+                    {getRuleIcon(rule.icon)}
                   </div>
                   <h4 className="font-serif text-lg font-bold text-forest-900 pr-8">{rule.title}</h4>
                   <p className="text-xs text-forest-655 font-light leading-relaxed">{rule.description}</p>
@@ -231,7 +250,9 @@ export default function Conservation({ onNavigate }: ConservationProps) {
                   In 1989, less than 320 mountain gorillas remained on the volcanic Virunga range. Thanks to intense anti-poaching, ranger health clinics, and the active contributions of the $1,500 permit network, populations have surpassed 1,063 wild primates.
                 </p>
                 <div className="p-4 bg-sand-50 rounded-2xl border border-forest-100 flex items-center gap-3">
-                  <span className="text-3xl">💹</span>
+                  <div className="p-2 bg-emerald-50 border border-emerald-150 rounded-xl text-emerald-700 shrink-0">
+                    <TrendingUp className="w-5 h-5" />
+                  </div>
                   <div>
                     <h4 className="text-xs font-bold text-forest-900 leading-tight">IUCN Registry Status</h4>
                     <p className="text-[10px] text-forest-600 font-normal mt-0.5">Elevated from "Critically Endangered" to "Endangered" in 2018.</p>
@@ -378,7 +399,7 @@ export default function Conservation({ onNavigate }: ConservationProps) {
                       <h4 className="text-xs font-bold leading-none">{item.name}</h4>
                       <p className={`text-[10px] ${selectedParkStat === item.id ? 'text-forest-100' : 'text-forest-600'}`}>{item.park}</p>
                     </div>
-                    <span className="text-xl">🛡</span>
+                    <Shield className={`w-4 h-4 shrink-0 transition ${selectedParkStat === item.id ? 'text-sand-600' : 'text-forest-600'}`} />
                   </button>
                 ))}
               </div>

@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Mail, Lock, User, Sparkles, X, ChevronRight } from 'lucide-react';
+import { Mail, Lock, User, Sparkles, X, ChevronRight, Info } from 'lucide-react';
 import { authService } from '../services';
 
 interface AuthModalProps {
@@ -210,9 +210,10 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
             )}
           </div>
 
-          <div className="mt-4 p-3 bg-forest-100/50 rounded-xl border border-forest-200/40 text-center">
-            <p className="text-[10px] text-forest-700 font-medium">
-              👉 Need Admin Access? Register or Login with email: <br/>
+          <div className="mt-4 p-3 bg-forest-100/50 rounded-xl border border-forest-200/40 text-center flex items-center justify-center gap-2">
+            <Info className="w-4.5 h-4.5 text-forest-750 shrink-0" />
+            <p className="text-[10px] text-forest-700 font-medium text-left">
+              Need Admin Access? Register or Login with email: <br/>
               <strong className="text-forest-900 font-mono text-xs">hobegorillarwanda@gmail.com</strong>
             </p>
           </div>
