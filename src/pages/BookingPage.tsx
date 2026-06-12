@@ -122,12 +122,6 @@ export default function BookingPage({
     e?.preventDefault();
     setError('');
 
-    if (!currentUser) {
-      // Prompt OAuth or standard signup/login
-      onTriggerAuth();
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       // Format details of addons or custom tier config so admins see it inside specialRequests if needed, or totalCost fits.
@@ -139,8 +133,10 @@ export default function BookingPage({
         requestsWithSetup = `${requestsWithSetup} | Tier Type: ${configuredSetup.tierLevel.toUpperCase()} | ${addonText}`.trim();
       }
 
+      const assignedUserId = currentUser?.uid || 'guest';
+
       const result = await bookingService.create({
-        userId: currentUser.uid,
+        userId: assignedUserId,
         fullName,
         email,
         phone,
@@ -151,6 +147,10 @@ export default function BookingPage({
         packageName: activePackage.title,
         totalCost: finalTotalCost
       });
+
+      if (!currentUser) {
+        localStorage.setItem('hobe_pending_guest_booking_id', result.id);
+      }
 
       setSuccessBooking(result);
       setStep(4);
@@ -463,18 +463,11 @@ export default function BookingPage({
 
             {/* Authentications alerts */}
             {!currentUser && (
-              <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-light text-amber-900">
+              <div className="p-4 bg-forest-50 border border-forest-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-light text-forest-900">
                 <div className="flex items-start gap-2.5">
-                  <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
-                  <p>Tracking registration requires a secured profile mapping. Authenticate now to submit reservations directly with Rwanda Development parks.</p>
+                  <Compass className="w-5 h-5 text-forest-750 shrink-0 mt-0.5" />
+                  <p>You are booking as a guest. You can submit your voucher request now and secure/register your profile permanently on the success page.</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={onTriggerAuth}
-                  className="py-2.5 px-6 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl uppercase text-[10px] tracking-wider transition whitespace-nowrap cursor-pointer"
-                >
-                  Sign-In to Lock-in
-                </button>
               </div>
             )}
 
@@ -526,6 +519,29 @@ export default function BookingPage({
                 <span className="font-sans font-bold text-forest-900">{successBooking.passengerCount} Clients</span>
               </div>
             </div>
+
+            {!currentUser && (
+              <div className="mt-6 p-5 bg-sand-100/80 rounded-2xl border border-forest-200/50 max-w-sm mx-auto text-left space-y-3.5">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-white rounded-xl border border-forest-100 shrink-0">
+                    <Sparkles className="w-4 h-4 text-forest-750" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-bold text-forest-950 font-mono tracking-wider uppercase">Claim Registration Voucher</h4>
+                    <p className="text-[10.5px] text-forest-700 leading-normal font-light mt-0.5">
+                      This voucher is currently linked to a temporary session. Create an account or sign in now to transfer this booking safely to your permanent tracking profile.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={onTriggerAuth}
+                  className="w-full py-2.5 bg-forest-900 hover:bg-forest-850 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider transition cursor-pointer text-center font-mono"
+                >
+                  Register Profile / Sign-In
+                </button>
+              </div>
+            )}
 
             <div className="pt-6 border-t border-forest-100 flex flex-col sm:flex-row gap-3 items-center justify-center">
               <button

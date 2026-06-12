@@ -12,6 +12,7 @@ import {
   AuthUser 
 } from './services';
 import { Destination, Package, Booking } from './types';
+import { SEED_DESTINATIONS, SEED_PACKAGES } from './data';
 
 // Importing beautiful modular pages
 import Home from './pages/Home';
@@ -28,8 +29,8 @@ import { Compass, Leaf, MapPin, Phone, Mail, AlertCircle } from 'lucide-react';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
-  const [destinations, setDestinations] = useState<Destination[]>([]);
-  const [packages, setPackages] = useState<Package[]>([]);
+  const [destinations, setDestinations] = useState<Destination[]>(SEED_DESTINATIONS);
+  const [packages, setPackages] = useState<Package[]>(SEED_PACKAGES);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
   
@@ -96,6 +97,21 @@ export default function App() {
 
   useEffect(() => {
     fetchAllData();
+  }, [currentUser]);
+
+  // 3. Auto-claim any guest bookings made prior to signing-in
+  useEffect(() => {
+    if (currentUser) {
+      const pendingGuestBookingId = localStorage.getItem('hobe_pending_guest_booking_id');
+      if (pendingGuestBookingId) {
+        bookingService.claimBooking(pendingGuestBookingId, currentUser.uid)
+          .then(() => {
+            localStorage.removeItem('hobe_pending_guest_booking_id');
+            fetchAllData();
+          })
+          .catch(err => console.error("Error auto-linking guest booking:", err));
+      }
+    }
   }, [currentUser]);
 
   // Handle Logouts

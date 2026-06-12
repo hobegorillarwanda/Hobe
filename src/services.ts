@@ -512,6 +512,23 @@ export const bookingService = {
     }
   },
 
+  async claimBooking(id: string, uid: string): Promise<void> {
+    if (isFirebaseActive() && db) {
+      try {
+        await updateDoc(doc(db, 'bookings', id), { userId: uid });
+      } catch (err) {
+        handleFirestoreError(err, OperationType.UPDATE, `bookings/${id}`);
+      }
+    } else {
+      const bookings = getLocalStorageData<Booking[]>(LOCAL_STORAGE_KEYS.BOOKINGS, []);
+      const bookingIdx = bookings.findIndex(b => b.id === id);
+      if (bookingIdx >= 0) {
+        bookings[bookingIdx].userId = uid;
+        setLocalStorageData(LOCAL_STORAGE_KEYS.BOOKINGS, bookings);
+      }
+    }
+  },
+
   async delete(id: string): Promise<void> {
     if (isFirebaseActive() && db) {
       try {
