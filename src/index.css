@@ -48,6 +48,18 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Elevate font-light weight globally for Roboto to ensure solid contrast and peak legibility */
+.font-light {
+  font-weight: 400 !important;
+}
+
+/* Ensure sub-headers and small labels in forest tints are readable and have sufficient visual weight */
+.text-forest-650, .text-forest-655, .text-forest-600 {
+  font-weight: 500;
 }
 
 /* Custom gorgeous thin scrollbar matching the reserve theme */

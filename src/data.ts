@@ -129,7 +129,7 @@ export const SEED_PACKAGES: Package[] = [
     title: 'Luxury Safari',
     duration: '3 Days / 2 Nights',
     tier: 'luxury',
-    baselineCost: 650,
+    baselineCost: 5800,
     description: 'An all-inclusive premium expedition featuring elite luxury eco-lodges, private 4x4 transport, and personalized high-end safari hospitality.',
     inclusions: [
       'Official Gorilla Trekking Permit',
