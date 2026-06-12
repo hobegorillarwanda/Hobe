@@ -255,10 +255,10 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
                       src={dest.imageUrl} 
                       alt={dest.name}
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover opacity-35 mix-blend-multiply transition-transform duration-700 group-hover:scale-103"
+                      className="w-full h-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-105"
                     />
-                    {/* Balanced vignette shade */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-900/60 to-forest-950/40"></div>
+                    {/* Balanced vignette shade for excellent readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/75 to-forest-950/20"></div>
                   </div>
                 )}
 
@@ -365,9 +365,9 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
                         src={activeDetailDest.imageUrl} 
                         alt={activeDetailDest.name}
                         referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover opacity-40 mix-blend-multiply"
+                        className="w-full h-full object-cover opacity-75"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-900/60 to-forest-950/40"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/70 to-forest-950/20"></div>
                     </div>
                   )}
 
