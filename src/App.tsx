@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.5
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { 
   authService, 
   destinationService, 
@@ -14,18 +14,20 @@ import {
 import { Destination, Package, Booking } from './types';
 import { SEED_DESTINATIONS, SEED_PACKAGES } from './data';
 
-// Importing beautiful modular pages
+// Eagerly import primary landing views for instant layout rendering
 import Home from './pages/Home';
-import Destinations from './pages/Destinations';
-import Packages from './pages/Packages';
-import Conservation from './pages/Conservation';
-import BookingsHub from './pages/BookingsHub';
-import BookingPage from './pages/BookingPage';
-import AdminPanel from './components/AdminPanel';
 import Navbar from './components/Navbar';
 import AuthModal from './components/AuthModal';
 
-import { Compass, Leaf, MapPin, Phone, Mail, AlertCircle } from 'lucide-react';
+// Lazily load heavier page modules for peak performance (best practice code splitting)
+const Destinations = lazy(() => import('./pages/Destinations'));
+const Packages = lazy(() => import('./pages/Packages'));
+const Conservation = lazy(() => import('./pages/Conservation'));
+const BookingsHub = lazy(() => import('./pages/BookingsHub'));
+const BookingPage = lazy(() => import('./pages/BookingPage'));
+const AdminPanel = lazy(() => import('./components/AdminPanel'));
+
+import { Compass, Leaf, MapPin, Phone, Mail, AlertCircle, FolderLock } from 'lucide-react';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
@@ -36,6 +38,26 @@ export default function App() {
   
   // Custom multi-page routing state
   const [currentRoute, setCurrentRoute] = useState<'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin'>('home');
+
+  // Synchronize route state with URL hash for perfect bookmarking, sharing & back-button support
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#/', '').replace('#', '');
+      const validRoutes = ['home', 'destinations', 'packages', 'booking', 'bookings-hub', 'conservation', 'admin'];
+      if (hash && validRoutes.includes(hash)) {
+        setCurrentRoute(hash as any);
+      } else if (!hash) {
+        // Fallback to home if no hash was set
+        setCurrentRoute('home');
+      }
+    };
+
+    // Run check initially on mount
+    handleHashChange();
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
   const [configuredSetup, setConfiguredSetup] = useState<{
     passengers: number;
     addons: string[];
@@ -136,7 +158,7 @@ export default function App() {
   };
 
   const handleNavigateWithScroll = (route: any) => {
-    setCurrentRoute(route);
+    window.location.hash = route;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -148,7 +170,7 @@ export default function App() {
         currentUser={currentUser}
         onLogout={handleLogout}
         currentRoute={currentRoute}
-        onChangeRoute={setCurrentRoute}
+        onChangeRoute={handleNavigateWithScroll}
         onTriggerAuth={handleTriggerAuthModal}
       />
 
@@ -172,65 +194,74 @@ export default function App() {
           </div>
         ) : (
           <div className="animate-in fade-in duration-300">
-            {currentRoute === 'home' && (
-              <Home 
-                destinations={destinations}
-                packages={packages}
-                onNavigate={handleNavigateWithScroll}
-                onSelectPackage={setSelectedPackage}
-              />
-            )}
+            <Suspense fallback={
+              <div className="flex flex-col items-center justify-center py-44 space-y-4">
+                <Compass className="w-12 h-12 text-forest-700 animate-spin" />
+                <p className="text-xs font-bold uppercase tracking-widest text-forest-800 font-mono">
+                  Optimizing Wilderness View...
+                </p>
+              </div>
+            }>
+              {currentRoute === 'home' && (
+                <Home 
+                  destinations={destinations}
+                  packages={packages}
+                  onNavigate={handleNavigateWithScroll}
+                  onSelectPackage={setSelectedPackage}
+                />
+              )}
 
-            {currentRoute === 'destinations' && (
-              <Destinations 
-                destinations={destinations}
-                onNavigate={handleNavigateWithScroll}
-              />
-            )}
+              {currentRoute === 'destinations' && (
+                <Destinations 
+                  destinations={destinations}
+                  onNavigate={handleNavigateWithScroll}
+                />
+              )}
 
-            {currentRoute === 'packages' && (
-              <Packages 
-                packages={packages}
-                onNavigate={handleNavigateWithScroll}
-                onSelectConfigurePkg={handleSelectConfigurePkg}
-              />
-            )}
+              {currentRoute === 'packages' && (
+                <Packages 
+                  packages={packages}
+                  onNavigate={handleNavigateWithScroll}
+                  onSelectConfigurePkg={handleSelectConfigurePkg}
+                />
+              )}
 
-            {currentRoute === 'conservation' && (
-              <Conservation 
-                onNavigate={handleNavigateWithScroll}
-              />
-            )}
+              {currentRoute === 'conservation' && (
+                <Conservation 
+                  onNavigate={handleNavigateWithScroll}
+                />
+              )}
 
-            {currentRoute === 'bookings-hub' && (
-              <BookingsHub 
-                currentUser={currentUser}
-                onNavigate={handleNavigateWithScroll}
-                onTriggerAuth={handleTriggerAuthModal}
-              />
-            )}
+              {currentRoute === 'bookings-hub' && (
+                <BookingsHub 
+                  currentUser={currentUser}
+                  onNavigate={handleNavigateWithScroll}
+                  onTriggerAuth={handleTriggerAuthModal}
+                />
+              )}
 
-            {currentRoute === 'booking' && (
-              <BookingPage 
-                packages={packages}
-                selectedPackage={selectedPackage}
-                configuredSetup={configuredSetup}
-                currentUser={currentUser}
-                onNavigate={handleNavigateWithScroll}
-                onTriggerAuth={handleTriggerAuthModal}
-                onSelectPackage={setSelectedPackage}
-              />
-            )}
+              {currentRoute === 'booking' && (
+                <BookingPage 
+                  packages={packages}
+                  selectedPackage={selectedPackage}
+                  configuredSetup={configuredSetup}
+                  currentUser={currentUser}
+                  onNavigate={handleNavigateWithScroll}
+                  onTriggerAuth={handleTriggerAuthModal}
+                  onSelectPackage={setSelectedPackage}
+                />
+              )}
 
-            {currentRoute === 'admin' && currentUser && currentUser.role === 'admin' && (
-              <AdminPanel 
-                currentUser={currentUser}
-                destinations={destinations}
-                packages={packages}
-                bookings={bookings}
-                refreshData={fetchAllData}
-              />
-            )}
+              {currentRoute === 'admin' && currentUser && currentUser.role === 'admin' && (
+                <AdminPanel 
+                  currentUser={currentUser}
+                  destinations={destinations}
+                  packages={packages}
+                  bookings={bookings}
+                  refreshData={fetchAllData}
+                />
+              )}
+            </Suspense>
           </div>
         )}
       </main>
@@ -327,12 +358,24 @@ export default function App() {
             <p>
               &copy; {new Date().getFullYear()} Hobe Gorilla Rwanda. All rights reserved. Created in Kigali.
             </p>
-            <div className="flex items-center gap-2 bg-forest-900/40 py-1 px-3.5 rounded-full border border-forest-850">
-              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span>
-              <span className="font-mono text-forest-200">
-                Official Admin Profile: hobegorillarwanda@gmail.com
+            <button
+              onClick={() => {
+                if (currentUser && currentUser.role === 'admin') {
+                  handleNavigateWithScroll('admin');
+                } else {
+                  setAuthModalMode('login');
+                  setAuthModalOpen(true);
+                }
+              }}
+              className="flex items-center gap-1.5 bg-forest-900/45 hover:bg-forest-900/75 py-1.5 px-3.5 rounded-full border border-forest-850 text-forest-200 transition cursor-pointer font-mono"
+            >
+              <FolderLock className="w-3.5 h-3.5 text-sand-500 shrink-0" />
+              <span>
+                {currentUser && currentUser.role === 'admin' 
+                  ? `Admin Workspace (${currentUser.email})` 
+                  : 'System Coordinator Login'}
               </span>
-            </div>
+            </button>
           </div>
 
         </div>

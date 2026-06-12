@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Compass, Leaf, Milestone, Star, Award, Heart, HelpCircle, Check, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Destination, Package } from '../types';
@@ -112,6 +112,48 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
     onNavigate('booking');
   };
 
+  // Dynamic typewriter texts for showcasing more places/primates of Rwanda
+  const wordsToShowcase = [
+    "Mountain Gorillas",
+    "Akagera Savannas",
+    "Nyungwe Canopy",
+    "Volcanoes National Park",
+    "Golden Monkeys",
+    "Misty Twin Lakes",
+    "Gishwati Forests"
+  ];
+  const [wordIndex, setWordIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let timer: any;
+    const activeText = wordsToShowcase[wordIndex];
+
+    const tick = () => {
+      if (!isDeleting) {
+        setCurrentText(activeText.substring(0, currentText.length + 1));
+        if (currentText === activeText) {
+          timer = setTimeout(() => setIsDeleting(true), 2100);
+          return;
+        }
+      } else {
+        setCurrentText(activeText.substring(0, currentText.length - 1));
+        if (currentText === '') {
+          setIsDeleting(false);
+          setWordIndex((prev) => (prev + 1) % wordsToShowcase.length);
+          return;
+        }
+      }
+
+      const speed = isDeleting ? 35 : 75;
+      timer = setTimeout(tick, speed);
+    };
+
+    timer = setTimeout(tick, isDeleting ? 40 : 110);
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, wordIndex]);
+
   return (
     <div className="space-y-0">
       
@@ -142,8 +184,11 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             transition={{ duration: 0.8, delay: 0.1 }}
             className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-white leading-[1.1]"
           >
-            Witness the Majesty of the <br/>
-            <span className="text-sand-100 font-serif italic">Mountain Gorillas</span>
+            Witness the Majesty of <br/>
+            <span className="text-sand-100 font-serif italic inline-flex items-center min-h-[1.25em]">
+              {currentText}
+              <span className="w-1.5 h-[0.9em] bg-sand-200 ml-2.5 animate-pulse inline-block rounded"></span>
+            </span>
           </motion.h1>
 
           <motion.p 

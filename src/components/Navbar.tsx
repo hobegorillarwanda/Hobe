@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { AuthUser } from '../services';
-import { Compass, Menu, X, ShieldAlert, LogOut, LogIn, User, Sparkles, FolderLock, Heart, HelpCircle, Eye, ShieldCheck, TreePine } from 'lucide-react';
+import { Compass, Menu, X, ShieldAlert, LogOut, LogIn, User, Sparkles, FolderLock, Heart, HelpCircle, Eye, ShieldCheck, TreePine, Home, Map, Briefcase, Leaf, Ticket, FileCheck } from 'lucide-react';
 import AuthModal from './AuthModal';
 
 interface NavbarProps {
@@ -65,25 +65,29 @@ export default function Navbar({ currentUser, onLogout, currentRoute, onChangeRo
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-forest-800">
             {[
-              { id: 'home', label: 'Home' },
-              { id: 'destinations', label: 'Destinations' },
-              { id: 'packages', label: 'Safari Packages' },
-              { id: 'conservation', label: 'Conservation' },
-              { id: 'bookings-hub', label: 'Bookings Hub' }
-            ].map(tab => (
-              <button
-                id={`nav-link-${tab.id}`}
-                key={tab.id}
-                onClick={() => handleRouteNavigate(tab.id as any)}
-                className={`hover:text-forest-600 transition cursor-pointer pb-1 border-b-2 ${
-                  currentRoute === tab.id 
-                    ? 'border-forest-700 text-forest-900 font-extrabold' 
-                    : 'border-transparent font-medium'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+              { id: 'home', label: 'Home', icon: Home },
+              { id: 'destinations', label: 'Destinations', icon: Map },
+              { id: 'packages', label: 'Safari Packages', icon: Briefcase },
+              { id: 'conservation', label: 'Conservation', icon: Leaf },
+              { id: 'bookings-hub', label: 'Bookings Hub', icon: Ticket }
+            ].map(tab => {
+              const IconComponent = tab.icon;
+              return (
+                <button
+                  id={`nav-link-${tab.id}`}
+                  key={tab.id}
+                  onClick={() => handleRouteNavigate(tab.id as any)}
+                  className={`flex items-center gap-1.5 hover:text-forest-600 transition cursor-pointer pb-1.5 border-b-2 ${
+                    currentRoute === tab.id 
+                      ? 'border-forest-700 text-forest-900 font-extrabold' 
+                      : 'border-transparent font-medium'
+                  }`}
+                >
+                  <IconComponent className="w-3.5 h-3.5 opacity-85 shrink-0" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Right Action buttons / profiles */}
@@ -99,7 +103,7 @@ export default function Navbar({ currentUser, onLogout, currentRoute, onChangeRo
                   : 'bg-forest-950 hover:bg-forest-850 text-white'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-sand-300" />
+              <FileCheck className="w-3.5 h-3.5 text-current shrink-0" />
               <span>Apply Permits</span>
             </button>
 
@@ -200,9 +204,9 @@ export default function Navbar({ currentUser, onLogout, currentRoute, onChangeRo
               <button
                 id="mobile-nav-action-booking"
                 onClick={() => handleRouteNavigate('booking')}
-                className={`text-left text-forest-900 border-l-2 border-sand-600 pl-3 flex items-center gap-1 cursor-pointer font-extrabold`}
+                className={`text-left text-forest-900 border-l-2 border-sand-600 pl-3 flex items-center gap-1.5 cursor-pointer font-extrabold`}
               >
-                <Sparkles className="w-3.5 h-3.5 text-sand-500" />
+                <FileCheck className="w-3.5 h-3.5 text-forest-800" />
                 <span>Apply Permits Now</span>
               </button>
             </div>
