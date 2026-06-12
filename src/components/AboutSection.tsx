@@ -58,7 +58,7 @@ export default function AboutSection({ onNavigate }: AboutSectionProps) {
             {/* Premium Partner Eco-Lodge Image */}
             <div className="w-full h-40 overflow-hidden rounded-xl border border-forest-800 shadow-lg relative">
               <img 
-                src="/src/assets/images/luxury_lodge_1781279715722.jpg" 
+                src="/assets/images/luxury_lodge_1781279715722.jpg" 
                 alt="Luxury Eco-Lodge Rwanda" 
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover brightness-95"

@@ -162,7 +162,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
         {/* Real Mountain Gorilla Background Image */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none">
           <img 
-            src="/src/assets/images/mountain_gorilla_1781279668251.jpg" 
+            src="/assets/images/mountain_gorilla_1781279668251.jpg" 
             alt="Majestic Mountain Gorilla" 
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover opacity-25 object-center mix-blend-luminosity brightness-90 animate-pulse duration-10000"
