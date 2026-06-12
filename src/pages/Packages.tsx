@@ -134,13 +134,13 @@ export default function Packages({ packages, onNavigate, onSelectConfigurePkg }:
       {/* 1. HEADER SECTION */}
       <div className="text-center space-y-4">
         <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-forest-100 px-3.5 py-1.5 rounded-full border border-forest-200/50 inline-block font-mono">
-          Safari Configurations
+          Safari Trip Options
         </span>
         <h1 className="font-serif text-4xl md:text-6xl font-bold tracking-tight text-forest-900 leading-none">
           Expedition Packages
         </h1>
         <p className="text-sm text-forest-650 max-w-xl mx-auto font-light leading-relaxed">
-          Select and customize tour formulas. Use the interactive pricing matrix to configure guests, luxury upgrades, and conservation support.
+          Select and customize tour formulas. Use the interactive planner to customize your visitors count, luxury upgrades, and conservation support.
         </p>
       </div>
 
@@ -200,7 +200,7 @@ export default function Packages({ packages, onNavigate, onSelectConfigurePkg }:
                 </div>
               </div>
 
-              {/* Price Tag and configure button */}
+              {/* Price Tag and selection button */}
               <div className="pt-6 border-t border-forest-100/10 flex items-center justify-between">
                 <div>
                   <span className={`block text-[9px] font-mono uppercase tracking-wider ${isSelected ? 'text-forest-200' : 'text-forest-600'}`}>
@@ -223,7 +223,7 @@ export default function Packages({ packages, onNavigate, onSelectConfigurePkg }:
                       : 'bg-forest-900 hover:bg-forest-850 text-white'
                   }`}
                 >
-                  Configure
+                  Select This
                 </button>
               </div>
 
@@ -251,9 +251,9 @@ export default function Packages({ packages, onNavigate, onSelectConfigurePkg }:
             {/* Passenger selection details */}
             <div className="space-y-3">
               <label htmlFor="pax-counter" className="text-xs font-bold text-forest-900 uppercase tracking-wider flex justify-between items-center">
-                <span>Number of Clients (Passengers)</span>
+                <span>Number of Travelers (Guests)</span>
                 <span className="text-sand-700 font-mono font-bold text-sm bg-sand-100 px-3 py-1 rounded-lg border border-sand-200">
-                  {passengers} Pax
+                  {passengers} Guests
                 </span>
               </label>
               

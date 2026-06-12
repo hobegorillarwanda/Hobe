@@ -246,9 +246,23 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
               <div 
                 id={`parks-show-card-${dest.id}`}
                 key={dest.id}
-                className={`rounded-3xl overflow-hidden shadow-luxury shadow-luxury-hover border border-forest-100 flex flex-col justify-between bg-gradient-to-br ${getGradientTheme(dest.id)} text-white p-8 space-y-6 transition-all`}
+                className="rounded-3xl overflow-hidden shadow-luxury shadow-luxury-hover border border-forest-100 flex flex-col justify-between text-white p-8 space-y-6 transition-all relative group bg-forest-950"
               >
-                <div className="space-y-6">
+                {/* Background image layer with subtle scale on hover */}
+                {dest.imageUrl && (
+                  <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                    <img 
+                      src={dest.imageUrl} 
+                      alt={dest.name}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover opacity-35 mix-blend-multiply transition-transform duration-700 group-hover:scale-103"
+                    />
+                    {/* Balanced vignette shade */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-900/60 to-forest-950/40"></div>
+                  </div>
+                )}
+
+                <div className="space-y-6 relative z-10 text-left">
                   {/* Row */}
                   <div className="flex justify-between items-start gap-4">
                     <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/15">
@@ -296,12 +310,12 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
                 </div>
 
                 {/* Weather Quick glance & interactive view details button */}
-                <div className="pt-6 border-t border-white/10 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="pt-6 border-t border-white/10 mt-4 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10 w-full">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-white/5 rounded-lg border border-white/10">
                       {tempWeather.icon}
                     </div>
-                    <div>
+                    <div className="text-left">
                       <p className="text-xs font-bold text-sand-100">{tempWeather.condition} ({tempWeather.temp})</p>
                       <p className="text-[9px] text-forest-150 leading-none mt-0.5">Real-time local climate gauge</p>
                     </div>
@@ -343,27 +357,39 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
                 exit={{ opacity: 0, scale: 0.95, y: 15 }}
                 className="w-full max-w-2xl bg-sand-50 rounded-3xl border border-forest-100 shadow-luxury overflow-hidden flex flex-col max-h-[90vh]"
               >
-                {/* Header Banner */}
-                <div className={`p-6 md:p-8 text-white relative bg-gradient-to-br ${getGradientTheme(activeDetailDest.id)} flex-shrink-0`}>
-                  <button
-                    id="close-dest-modal"
-                    onClick={() => setActiveDetailDest(null)}
-                    className="absolute top-5 right-5 p-1.5 rounded-full bg-white/10 hover:bg-white/15 text-white/90 hover:text-white border border-white/5 cursor-pointer"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
+                {/* Header Banner with Rich Background Image */}
+                <div className="p-6 md:p-8 text-white relative flex-shrink-0 bg-forest-950 min-h-[160px] flex flex-col justify-end">
+                  {activeDetailDest.imageUrl && (
+                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                      <img 
+                        src={activeDetailDest.imageUrl} 
+                        alt={activeDetailDest.name}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover opacity-40 mix-blend-multiply"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-900/60 to-forest-950/40"></div>
+                    </div>
+                  )}
 
-                  <div className="space-y-4 pr-8">
+                  <div className="space-y-4 pr-8 relative z-10 w-full text-left">
+                    <button
+                      id="close-dest-modal"
+                      onClick={() => setActiveDetailDest(null)}
+                      className="absolute -top-1 md:-top-3 right-0 p-1.5 rounded-full bg-white/10 hover:bg-white/15 text-white/90 hover:text-white border border-white/5 cursor-pointer z-20"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-sand-200">National Parks Dossier</span>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-sand-200">National Park Guide</span>
                       <span className="w-1.5 h-1.5 bg-sand-600 rounded-full animate-ping"></span>
                     </div>
 
-                    <h3 className="font-serif text-2xl md:text-3xl font-bold tracking-tight">
+                    <h3 className="font-serif text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">
                       {activeDetailDest.name}
                     </h3>
 
-                    <p className="text-xs text-forest-100 font-light leading-relaxed">
+                    <p className="text-xs text-forest-150 font-light leading-relaxed">
                       {activeDetailDest.description}
                     </p>
                   </div>

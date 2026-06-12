@@ -412,7 +412,7 @@ export default function Conservation({ onNavigate }: ConservationProps) {
                   <Shield className="w-5.5 h-5.5" />
                 </div>
                 <div>
-                  <span className="text-[9px] font-mono uppercase tracking-widest text-sand-700 font-bold">Warden Operations Unit Log</span>
+                  <span className="text-[9px] font-mono uppercase tracking-widest text-sand-700 font-bold">Active Warden Station Summary</span>
                   <h3 className="font-serif text-xl md:text-2xl font-bold text-forest-900 leading-tight">
                     {stat.title}
                   </h3>

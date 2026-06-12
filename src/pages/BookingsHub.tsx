@@ -76,13 +76,13 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
       {/* 1. VIEW HEADER */}
       <div className="text-center space-y-4">
         <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-forest-100 px-3.5 py-1.5 rounded-full border border-forest-200/50 inline-block font-mono">
-          Client Sanctuary
+          My Sanctuary
         </span>
         <h1 className="font-serif text-4xl md:text-6xl font-bold tracking-tight text-forest-900 leading-none">
           My Permits Hub
         </h1>
         <p className="text-sm text-forest-650 max-w-xl mx-auto font-light leading-relaxed">
-          Access your secured reservation logs, issue official physical print copies of conservation dockets, and configure your wilderness trail preparedness.
+          Access your saved booking history, print your official tracking permits, and prepare for your mountain trail trek.
         </p>
       </div>
 
@@ -104,7 +104,7 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
               onClick={onTriggerAuth}
               className="py-3 px-8 bg-forest-900 hover:bg-forest-850 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider transition cursor-pointer"
             >
-              Sign-in / Authenticate Profile
+              Sign-In or Register Account
             </button>
           </div>
         </div>
@@ -130,19 +130,19 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
 
             {loading ? (
               <div className="py-20 text-center text-xs text-forest-600">
-                Retrieving verified secure dockets from Hobe Gorilla cloud store...
+                Loading your tracking permits from our reservation list...
               </div>
             ) : bookings.length === 0 ? (
               <div className="bg-white p-8 rounded-3xl border border-forest-100 text-center space-y-5">
                 <p className="text-xs text-forest-650 font-light">
-                  No active primate tracking reservations are associated with your verified account profile yet.
+                  You do not have any active tracking permits booked yet under this account.
                 </p>
                 <button
                   id="hub-book-tour-btn"
                   onClick={() => onNavigate('packages')}
                   className="py-2.5 px-6 bg-sand-600 hover:bg-sand-700 text-forest-950 font-bold rounded-xl text-xs uppercase tracking-wider transition cursor-pointer inline-block"
                 >
-                  Configure Tourism Package
+                  View Expedition Packages
                 </button>
               </div>
             ) : (

@@ -167,13 +167,13 @@ export default function BookingPage({
       {/* 1. LAYOUT SECTION TITLES */}
       <div className="text-center space-y-4 mb-12">
         <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-forest-100 px-3.5 py-1.5 rounded-full border border-forest-200/50 inline-block font-mono font-bold">
-          Step Wise Registry
+          Secure Your Permit
         </span>
         <h1 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-forest-900 leading-none">
-          Permits Securing Desk
+          Secure Personal Permits
         </h1>
         <p className="text-xs text-forest-650 max-w-md mx-auto font-light leading-relaxed">
-          Legal gorilla licenses are severely capped by the government of Rwanda. Complete your credentials dossier to lock-in active tracking calendars.
+          Official gorilla permits are limited in Rwanda to protect the mountain gorillas. Complete your visitor details to reserve your dates.
         </p>
       </div>
 
@@ -181,8 +181,8 @@ export default function BookingPage({
         <div className="mb-8 max-w-md mx-auto">
           {/* Progress indicators steps */}
           <div className="flex justify-between items-center text-xs font-mono font-bold text-sand-800">
-            <span className={step >= 1 ? 'text-forest-700' : 'text-stone-400'}>1. PERMITS PARAM</span>
-            <span className={step >= 2 ? 'text-forest-700' : 'text-stone-400'}>2. CREDENTIALS</span>
+            <span className={step >= 1 ? 'text-forest-700' : 'text-stone-400'}>1. BOOKING OPTIONS</span>
+            <span className={step >= 2 ? 'text-forest-700' : 'text-stone-400'}>2. VISITOR DETAILS</span>
             <span className={step >= 3 ? 'text-forest-700' : 'text-stone-400'}>3. REVIEW</span>
           </div>
           <div className="h-1.5 w-full bg-forest-100 rounded-full mt-2 overflow-hidden">
@@ -304,7 +304,7 @@ export default function BookingPage({
                 onClick={handleNextStep}
                 className="py-3 px-8 bg-forest-900 border border-forest-800 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider hover:bg-forest-850 cursor-pointer text-center"
               >
-                Proceed with Credentials
+                Proceed to Visitor Details
               </button>
             </div>
           </div>
@@ -315,7 +315,7 @@ export default function BookingPage({
           <div className="space-y-6">
             <h3 className="font-serif text-xl font-bold text-forest-900 flex items-center gap-2">
               <User className="w-5 h-5 text-sand-600" />
-              <span>Primate registry credentials passport dossier</span>
+              <span>Visitor Information & Passport Details</span>
             </h3>
 
             <div className="space-y-4">
