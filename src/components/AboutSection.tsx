@@ -7,7 +7,7 @@ import { SIGNATURE_ITINERARY, SEED_METADATA } from '../data';
 import { Compass, Leaf, Heart, MapPin, Milestone } from 'lucide-react';
 
 interface AboutSectionProps {
-  onNavigate: (view: 'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin') => void;
+  onNavigate: (view: 'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin', subRoute?: string) => void;
 }
 
 export default function AboutSection({ onNavigate }: AboutSectionProps) {

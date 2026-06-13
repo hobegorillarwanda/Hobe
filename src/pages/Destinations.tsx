@@ -5,15 +5,31 @@
 
 import { useState } from 'react';
 import { Compass, Search, Tag, Eye, CloudRain, Sun, Leaf, HelpCircle, X, Check, MapPin, TreePine, ArrowRight, ChevronDown } from 'lucide-react';
-import { Destination } from '../types';
+import { Destination, Package } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
+import DestinationDetail from './DestinationDetail';
 
 interface DestinationsProps {
   destinations: Destination[];
-  onNavigate: (view: 'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin') => void;
+  onNavigate: (view: 'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin', subRoute?: string) => void;
+  activeDestinationId?: string | null;
+  onSelectConfigurePkg?: (pkg: Package, setup: any) => void;
 }
 
-export default function Destinations({ destinations, onNavigate }: DestinationsProps) {
+export default function Destinations({ destinations, onNavigate, activeDestinationId, onSelectConfigurePkg }: DestinationsProps) {
+  if (activeDestinationId) {
+    const chosen = destinations.find(d => d.id === activeDestinationId);
+    if (chosen) {
+      return (
+        <DestinationDetail 
+          destination={chosen}
+          onNavigate={onNavigate}
+          onSelectConfigurePkg={onSelectConfigurePkg}
+        />
+      );
+    }
+  }
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedWildlifeFilter, setSelectedWildlifeFilter] = useState<string | null>(null);
   const [selectedHighlightFilter, setSelectedHighlightFilter] = useState<string | null>(null);
@@ -323,7 +339,7 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
 
                   <button
                     id={`btn-dest-explore-${dest.id}`}
-                    onClick={() => { setActiveDetailDest(dest); setActiveGalleryIndex(0); }}
+                    onClick={() => onNavigate('destinations', dest.id)}
                     className="w-full sm:w-auto py-2.5 px-5 bg-white text-forest-950 hover:bg-sand-100 rounded-xl text-xs uppercase font-extrabold flex items-center justify-center gap-2 transition cursor-pointer"
                   >
                     <span>View Details & Safety Guide</span>
@@ -382,7 +398,6 @@ export default function Destinations({ destinations, onNavigate }: DestinationsP
 
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-sand-200">National Park Guide</span>
-                      <span className="w-1.5 h-1.5 bg-sand-600 rounded-full animate-ping"></span>
                     </div>
 
                     <h3 className="font-serif text-2xl md:text-3xl font-bold tracking-tight text-white leading-tight">

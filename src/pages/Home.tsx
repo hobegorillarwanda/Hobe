@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { Compass, Leaf, Milestone, Star, Award, Heart, HelpCircle, Check, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import Logo from '../components/Logo';
 import { Destination, Package } from '../types';
 import AboutSection from '../components/AboutSection';
 
@@ -15,6 +16,7 @@ interface ShowcaseItem {
   location: string;
   description: string;
   imageUrl: string;
+  destinationId?: string;
 }
 
 const SHOWCASE_WILDLIFE: ShowcaseItem[] = [
@@ -23,28 +25,32 @@ const SHOWCASE_WILDLIFE: ShowcaseItem[] = [
     name: 'Mountain Gorilla Group',
     location: 'Volcanoes National Park',
     description: 'The legendary gentle giant primates nesting in high-altitude bamboo mist canopies.',
-    imageUrl: '/assets/images/mountain_gorilla_1781279668251.jpg'
+    imageUrl: '/assets/images/mountain_gorilla_1781279668251.jpg',
+    destinationId: 'volcanoes-np'
   },
   {
     id: 'w-monkey',
     name: 'Golden Monkey',
     location: 'Volcanoes National Park Foothills',
     description: 'High-energy, rare bamboo-dwelling monkeys covered in dense, striking sunset orange fur.',
-    imageUrl: '/assets/images/golden_monkey_1781279732182.jpg'
+    imageUrl: '/assets/images/golden_monkey_1781279732182.jpg',
+    destinationId: 'volcanoes-np'
   },
   {
     id: 'w-chimp',
     name: 'Eastern Chimpanzee',
     location: 'Nyungwe & Gishwati Montane Canopy',
     description: 'Intelligent, deeply expressive social primate communities swinging in rich tree crowns.',
-    imageUrl: '/assets/images/chimpanzee_nyungwe_1781280491456.jpg'
+    imageUrl: '/assets/images/chimpanzee_nyungwe_1781280491456.jpg',
+    destinationId: 'nyungwe-np'
   },
   {
     id: 'w-elephant',
     name: 'Savanna Giants (Elephants)',
     location: 'Akagera National Park',
     description: 'Ancient, majestic family herds roaming lakeside woodlands alongside zebras and rhinos.',
-    imageUrl: '/assets/images/akagera_safari_1781279684583.jpg'
+    imageUrl: '/assets/images/akagera_safari_1781279684583.jpg',
+    destinationId: 'akagera-np'
   }
 ];
 
@@ -54,35 +60,39 @@ const SHOWCASE_PLACES: ShowcaseItem[] = [
     name: 'Nyungwe Canopy Walkway',
     location: 'Southwestern Rainforest',
     description: 'A spectacular steel suspension bridge high above ancient dense tree crowns.',
-    imageUrl: '/assets/images/nyungwe_forest_1781279699629.jpg'
+    imageUrl: '/assets/images/nyungwe_forest_1781279699629.jpg',
+    destinationId: 'nyungwe-np'
   },
   {
     id: 'p-kivu',
     name: 'Lake Kivu Horizon',
     location: 'Rubavu & Karongi Coastline',
     description: 'Speckled volcanic lakeside beaches where traditional three-hulled fishing boats chant at sunset.',
-    imageUrl: '/assets/images/lake_kivu_sunset_1781280461436.jpg'
+    imageUrl: '/assets/images/lake_kivu_sunset_1781280461436.jpg',
+    destinationId: 'volcanoes-np'
   },
   {
     id: 'p-twin',
     name: 'Misty Twin Lakes',
     location: 'Burera & Ruhondo Hills',
     description: 'Vibrant volcanic water craters cradled softly under rolling emerald-green terraced farms.',
-    imageUrl: '/assets/images/twin_lakes_rwanda_1781280478382.jpg'
+    imageUrl: '/assets/images/twin_lakes_rwanda_1781280478382.jpg',
+    destinationId: 'volcanoes-np'
   },
   {
     id: 'p-resort',
     name: 'Wilderness Eco-Lodge',
     location: 'Sabyinyo Foothills',
     description: 'Stunning luxury volcanic stone cottages designed sustainably around mist-covered peaks.',
-    imageUrl: '/assets/images/luxury_lodge_1781279715722.jpg'
+    imageUrl: '/assets/images/luxury_lodge_1781279715722.jpg',
+    destinationId: 'volcanoes-np'
   }
 ];
 
 interface HomeProps {
   destinations: Destination[];
   packages: Package[];
-  onNavigate: (view: 'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin') => void;
+  onNavigate: (view: 'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin', subRoute?: string) => void;
   onSelectPackage: (pkg: Package) => void;
 }
 
@@ -254,11 +264,9 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             transition={{ duration: 0.6 }}
             className="flex items-center justify-center gap-2 mb-2"
           >
-            <span className="w-1.5 h-1.5 bg-forest-600 rounded-full"></span>
             <span className="text-xs font-bold tracking-widest text-forest-800 bg-emerald-100/70 px-4 py-1.5 rounded-full border border-forest-200/50 uppercase font-mono">
               Authorized Eco-Luxury Safari Partner
             </span>
-            <span className="w-1.5 h-1.5 bg-forest-600 rounded-full"></span>
           </motion.div>
 
           <motion.h1 
@@ -270,7 +278,6 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             Witness the Majesty of <br/>
             <span className="text-forest-850 font-serif italic inline-flex items-center min-h-[1.25em]">
               {currentText}
-              <span className="w-1.5 h-[0.9em] bg-forest-800 ml-2.5 animate-pulse inline-block rounded"></span>
             </span>
           </motion.h1>
 
@@ -420,7 +427,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                     
                     <button
                       type="button"
-                      onClick={() => onNavigate('destinations')}
+                      onClick={() => onNavigate('destinations', item.destinationId)}
                       className="text-[10px] font-mono tracking-widest font-bold text-forest-700 hover:text-forest-950 uppercase flex items-center gap-1.5 transition-colors self-start cursor-pointer mt-3"
                     >
                       <span>Explore Region</span>
@@ -496,8 +503,8 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                   transition={{ duration: 0.4 }}
                   className="space-y-6 text-center py-4"
                 >
-                  <div className="w-14 h-14 bg-forest-100 rounded-full border border-forest-200 flex items-center justify-center mx-auto text-forest-750">
-                    <Compass className="w-7 h-7" />
+                  <div className="w-16 h-16 bg-emerald-50 rounded-2xl border border-forest-100 flex items-center justify-center mx-auto text-forest-750 p-2">
+                    <Logo size={56} />
                   </div>
 
                   <div className="space-y-2">

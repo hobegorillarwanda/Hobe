@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { AuthUser } from '../services';
 import { Compass, Menu, X, ShieldAlert, LogOut, LogIn, User, Sparkles, FolderLock, Heart, HelpCircle, Eye, ShieldCheck, TreePine, Home, Map, Briefcase, Leaf, Ticket, FileCheck } from 'lucide-react';
+import Logo from './Logo';
 import AuthModal from './AuthModal';
 
 interface NavbarProps {
@@ -49,8 +50,8 @@ export default function Navbar({ currentUser, onLogout, currentRoute, onChangeRo
             onClick={handleLogoClick}
             className="flex items-center gap-2.5 cursor-pointer group text-left"
           >
-            <div className="p-2.5 bg-forest-700 text-sand-50 rounded-xl transition group-hover:bg-forest-600">
-              <Compass className="w-5 h-5" />
+            <div className="p-1 bg-emerald-50 rounded-xl transition-all duration-300 group-hover:scale-105 border border-forest-100">
+              <Logo size={42} />
             </div>
             <div>
               <h1 className="font-serif text-lg lg:text-xl font-bold tracking-tight text-forest-900 leading-none">

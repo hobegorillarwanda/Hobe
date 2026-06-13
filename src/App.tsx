@@ -28,6 +28,7 @@ const BookingPage = lazy(() => import('./pages/BookingPage'));
 const AdminPanel = lazy(() => import('./components/AdminPanel'));
 
 import { Compass, Leaf, MapPin, Phone, Mail, AlertCircle, FolderLock } from 'lucide-react';
+import Logo from './components/Logo';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
@@ -38,25 +39,37 @@ export default function App() {
   
   // Custom multi-page routing state
   const [currentRoute, setCurrentRoute] = useState<'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin'>('home');
+  const [selectedDestinationId, setSelectedDestinationId] = useState<string | null>(null);
 
-  // Synchronize route state with URL hash for perfect bookmarking, sharing & back-button support
+  // Synchronize route state with URL path for perfect bookmarking, sharing & back-button support without #
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#/', '').replace('#', '');
+    const handlePopState = () => {
+      const pathWithSlash = window.location.pathname;
+      const parts = pathWithSlash.split('/').filter(Boolean);
+      
+      const mainRoute = parts[0] || 'home';
+      const subRoute = parts[1] || null;
+
       const validRoutes = ['home', 'destinations', 'packages', 'booking', 'bookings-hub', 'conservation', 'admin'];
-      if (hash && validRoutes.includes(hash)) {
-        setCurrentRoute(hash as any);
-      } else if (!hash) {
-        // Fallback to home if no hash was set
+      if (validRoutes.includes(mainRoute)) {
+        setCurrentRoute(mainRoute as any);
+        if (mainRoute === 'destinations') {
+          setSelectedDestinationId(subRoute);
+        } else {
+          setSelectedDestinationId(null);
+        }
+      } else {
+        // Fallback
         setCurrentRoute('home');
+        setSelectedDestinationId(null);
       }
     };
 
     // Run check initially on mount
-    handleHashChange();
+    handlePopState();
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
   const [configuredSetup, setConfiguredSetup] = useState<{
     passengers: number;
@@ -157,8 +170,18 @@ export default function App() {
     setAuthModalOpen(true);
   };
 
-  const handleNavigateWithScroll = (route: any) => {
-    window.location.hash = route;
+  const handleNavigateWithScroll = (route: any, subRoute?: string) => {
+    const buildPath = subRoute 
+      ? `/${route}/${subRoute}` 
+      : `/${route === 'home' ? '' : route}`;
+    
+    window.history.pushState({}, '', buildPath);
+    setCurrentRoute(route);
+    if (route === 'destinations') {
+      setSelectedDestinationId(subRoute || null);
+    } else {
+      setSelectedDestinationId(null);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -215,6 +238,8 @@ export default function App() {
                 <Destinations 
                   destinations={destinations}
                   onNavigate={handleNavigateWithScroll}
+                  activeDestinationId={selectedDestinationId}
+                  onSelectConfigurePkg={handleSelectConfigurePkg}
                 />
               )}
 
@@ -275,8 +300,8 @@ export default function App() {
             {/* Column 1: Branding and certifications */}
             <div className="md:col-span-5 space-y-6">
               <div className="flex items-center gap-2.5">
-                <div className="p-2.5 bg-sand-600 text-forest-950 rounded-xl">
-                  <Compass className="w-5 h-5" />
+                <div className="p-1 bg-emerald-50 rounded-xl border border-forest-800">
+                  <Logo size={42} />
                 </div>
                 <h3 className="font-serif text-xl font-bold tracking-tight">
                   Hobe Gorilla Rwanda

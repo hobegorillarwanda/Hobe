@@ -8,6 +8,7 @@ import { Booking } from '../types';
 import { bookingService, AuthUser } from '../services';
 import { Compass, HelpCircle, Check, MapPin, Printer, ShieldCheck, Heart, User, Calendar, FileText, CheckSquare, Square, RefreshCw, X, Clock, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import Logo from '../components/Logo';
 
 interface BookingsHubProps {
   currentUser: AuthUser | null;
@@ -89,8 +90,8 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
       {/* 2. SECURITY GUARD GATE - RENDER CORRESPONDING STATES */}
       {!currentUser ? (
         <div className="max-w-2xl mx-auto bg-white rounded-3xl border border-forest-100 p-8 md:p-10 shadow-luxury text-center space-y-6">
-          <div className="w-14 h-14 bg-forest-50 border border-forest-150 rounded-full flex items-center justify-center mx-auto text-forest-750">
-            <Compass className="w-7 h-7" />
+          <div className="w-16 h-16 bg-emerald-50 border border-forest-150 rounded-2xl flex items-center justify-center mx-auto text-forest-750 p-2">
+            <Logo size={48} />
           </div>
           <div className="space-y-2">
             <h3 className="font-serif text-2xl font-bold text-forest-900">Sign-in to Sync Reservation Records</h3>
@@ -166,14 +167,15 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
                         </div>
 
                         {/* Status label badges */}
-                        <span className={`text-[10px] uppercase tracking-wider font-mono font-extrabold px-3 py-1 rounded-full border ${
+                        <span className={`text-[10px] uppercase tracking-wider font-mono font-extrabold px-3 py-1 rounded-full border flex items-center gap-1.5 h-fit ${
                           isConfirmed 
                             ? 'bg-forest-100 border-forest-200 text-forest-750' 
                             : isCancelled 
                               ? 'bg-red-50 border-red-100 text-red-700' 
                               : 'bg-amber-50 border-amber-100 text-amber-700'
                         }`}>
-                          ● {booking.status}
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isConfirmed ? 'bg-forest-600' : isCancelled ? 'bg-red-500' : 'bg-amber-500'}`}></span>
+                          <span>{booking.status}</span>
                         </span>
                       </div>
 
