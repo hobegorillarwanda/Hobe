@@ -231,20 +231,22 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
     <div className="space-y-0">
       
       {/* 1. HERO HEADER */}
-      <header className="relative bg-emerald-50 text-forest-950 min-h-[90vh] flex items-center justify-center px-6 py-24 overflow-hidden">
+      <header className="relative bg-emerald-100 text-forest-950 min-h-[90vh] flex items-center justify-center px-6 py-24 overflow-hidden">
         {/* Real Mountain Gorilla Background Image */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none">
           <img 
             src="/assets/images/mountain_gorilla_1781279668251.jpg" 
             alt="Majestic Mountain Gorilla" 
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover opacity-85 object-center"
+            className="w-full h-full object-cover opacity-95 object-center brightness-105 contrast-105"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-emerald-50/70 z-10"></div>
+        {/* Luminous sun-drenched forest overlay - green vibes and bright image visibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/15 via-emerald-800/10 to-emerald-50/80 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-50/95 via-emerald-100/40 to-transparent z-10"></div>
         {/* Decorative ambient blur elements */}
-        <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-emerald-300/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-1/4 right-1/10 w-120 h-120 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-1/4 right-1/10 w-120 h-120 bg-emerald-300/20 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-4xl mx-auto text-center relative z-20 space-y-8">
           <motion.div 
