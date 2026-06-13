@@ -10,12 +10,11 @@ import { authService } from '../services';
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (user: any) => void;
   initialMode?: 'login' | 'register';
 }
 
 export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login' }: AuthModalProps) {
-  const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -33,12 +32,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
     setError('');
 
     try {
-      if (mode === 'login') {
-        await authService.signInWithEmail(email, password);
-      } else {
-        await authService.signUpWithEmail(email, password);
-      }
-      onSuccess?.();
+      const user = await authService.signInWithEmail(email, password);
+      onSuccess?.(user);
       onClose();
     } catch (err: any) {
       setError(err?.message || 'Authentication error happened, please try again.');
@@ -51,8 +46,8 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
     setLoading(true);
     setError('');
     try {
-      await authService.signInWithGoogle();
-      onSuccess?.();
+      const user = await authService.signInWithGoogle();
+      onSuccess?.(user);
       onClose();
     } catch (err: any) {
       setError(err?.message || 'Google Auth error, please try again.');
@@ -78,7 +73,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
           </button>
           
           <h3 className="font-serif text-2xl font-bold tracking-tight text-sand-100 mt-2">
-            {mode === 'login' ? 'Welcome Back' : 'Create Safari Account'}
+            Sign In to Account
           </h3>
           <p className="text-xs text-forest-100 mt-1">
             Access customized itineraries and Gorilla tracking logs
@@ -142,7 +137,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
               disabled={loading}
               className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-forest-700 hover:bg-forest-600 disabled:bg-forest-200 text-sand-50 font-medium rounded-xl text-sm shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-forest-700 cursor-pointer"
             >
-              <span>{loading ? 'Authenticating...' : mode === 'login' ? 'Sign In' : 'Create Account'}</span>
+              <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </form>
@@ -182,34 +177,6 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
             </svg>
             <span>Continue with Google</span>
           </button>
-
-          <div className="mt-6 text-center text-xs">
-            {mode === 'login' ? (
-              <p className="text-forest-700">
-                Don't have an account yet?{' '}
-                <button
-                  id="switch-to-register-btn"
-                  onClick={() => setMode('register')}
-                  className="font-bold text-forest-900 underline hover:text-forest-600 transition"
-                >
-                  Create one here
-                </button>
-              </p>
-            ) : (
-              <p className="text-forest-700">
-                Already have an account?{' '}
-                <button
-                  id="switch-to-login-btn"
-                  onClick={() => setMode('login')}
-                  className="font-bold text-forest-900 underline hover:text-forest-600 transition"
-                >
-                  Sign in here
-                </button>
-              </p>
-            )}
-          </div>
-
-
         </div>
       </div>
     </div>

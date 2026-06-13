@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { Destination, Package, Booking } from '../types';
 import { AuthUser, destinationService, packageService, bookingService } from '../services';
-import { ShieldCheck, Database, Layers, ClipboardList, PenTool, Plus, Trash2, Edit2, CheckCircle2, XCircle, Clock, Tag, RefreshCw, Lock, MessageSquare } from 'lucide-react';
+import { ShieldCheck, Database, Layers, ClipboardList, PenTool, Plus, Trash2, Edit2, CheckCircle2, XCircle, Clock, Tag, RefreshCw, Lock, MessageSquare, DollarSign, Users, TrendingUp, Award } from 'lucide-react';
 
 interface AdminPanelProps {
   currentUser: AuthUser | null;
@@ -207,6 +207,37 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
     return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(cost);
   };
 
+  // Analytics and Metrics
+  const confirmedBookings = bookings.filter(b => b.status === 'Confirmed');
+  const pendingBookings = bookings.filter(b => b.status === 'Pending' || !b.status);
+  
+  const totalRevenue = confirmedBookings.reduce((sum, b) => sum + (b.totalCost || 0), 0);
+  const pendingRevenue = pendingBookings.reduce((sum, b) => sum + (b.totalCost || 0), 0);
+  
+  const totalConfirmedPassengers = confirmedBookings.reduce((sum, b) => sum + (b.passengerCount || 0), 0);
+  const totalPendingPassengers = pendingBookings.reduce((sum, b) => sum + (b.passengerCount || 0), 0);
+  
+  const confirmationRate = bookings.length > 0 
+    ? Math.round((confirmedBookings.length / bookings.length) * 100) 
+    : 0;
+
+  // Compute most popular package
+  const packageCounts = bookings.reduce((acc, b) => {
+    if (b.packageName) {
+      acc[b.packageName] = (acc[b.packageName] || 0) + 1;
+    }
+    return acc;
+  }, {} as Record<string, number>);
+  
+  let topPackage = "None Active";
+  let topPackageCount = 0;
+  Object.entries(packageCounts).forEach(([name, count]) => {
+    if (count > topPackageCount) {
+      topPackageCount = count;
+      topPackage = name;
+    }
+  });
+
   return (
     <div id="admin-panel-container" className="max-w-7xl mx-auto py-12 px-6 space-y-8 animate-in fade-in duration-300">
       
@@ -235,6 +266,74 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
           <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
           <span>{isSyncing ? 'Syncing...' : 'Sync Database'}</span>
         </button>
+      </div>
+
+      {/* Analytics Overview Panels */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* KPI 1 */}
+        <div className="bg-white p-5 rounded-2xl border border-forest-100 shadow-sm flex items-start justify-between min-h-[120px]">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-forest-600 uppercase tracking-widest">Invoiced Volume</p>
+            <h3 className="text-2xl font-bold text-forest-950 font-mono tracking-tight">{formatCostInUSD(totalRevenue)}</h3>
+            <p className="text-[10px] text-forest-500 font-medium leading-relaxed">
+              Pending estimate: <span className="font-semibold text-amber-700">{formatCostInUSD(pendingRevenue)}</span>
+            </p>
+          </div>
+          <div className="p-2.5 bg-emerald-50 text-emerald-800 rounded-xl border border-emerald-100 shrink-0">
+            <DollarSign className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* KPI 2 */}
+        <div className="bg-white p-5 rounded-2xl border border-forest-100 shadow-sm flex items-start justify-between min-h-[120px]">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold text-forest-600 uppercase tracking-widest">Approved Permits</p>
+            <h3 className="text-2xl font-bold text-forest-950 font-mono tracking-tight">{totalConfirmedPassengers} <span className="text-xs font-normal text-forest-700">seats</span></h3>
+            <p className="text-[10px] text-forest-500 font-medium leading-relaxed">
+              In progress queue: <span className="font-semibold text-amber-700">{totalPendingPassengers} pending</span>
+            </p>
+          </div>
+          <div className="p-2.5 bg-forest-50 text-forest-900 rounded-xl border border-forest-100 shrink-0">
+            <Users className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* KPI 3 */}
+        <div className="bg-white p-5 rounded-2xl border border-forest-100 shadow-sm flex items-start justify-between min-h-[120px]">
+          <div className="space-y-1 w-full flex-1">
+            <p className="text-[10px] font-bold text-forest-600 uppercase tracking-widest">Leads Approved</p>
+            <div className="flex items-baseline gap-2">
+              <h3 className="text-2xl font-bold text-forest-950 font-mono tracking-tight">{confirmationRate}%</h3>
+              <span className="text-[9px] font-semibold text-forest-500">({confirmedBookings.length}/{bookings.length})</span>
+            </div>
+            {/* Simple mini-progress bar */}
+            <div className="w-full bg-forest-50 border border-forest-100/50 rounded-full h-1.5 mt-2 overflow-hidden">
+              <div 
+                className="bg-forest-700 h-full rounded-full transition-all duration-500" 
+                style={{ width: `${confirmationRate}%` }}
+              ></div>
+            </div>
+          </div>
+          <div className="p-2.5 bg-sky-50 text-sky-850 rounded-xl border border-sky-100 shrink-0 ml-3">
+            <TrendingUp className="w-5 h-5" />
+          </div>
+        </div>
+
+        {/* KPI 4 */}
+        <div className="bg-white p-5 rounded-2xl border border-forest-100 shadow-sm flex items-start justify-between min-h-[120px]">
+          <div className="space-y-1 flex-1 min-w-0">
+            <p className="text-[10px] font-bold text-forest-600 uppercase tracking-widest">Preferred Safari</p>
+            <h3 className="text-sm font-bold text-forest-950 font-serif truncate mt-1 tracking-tight" title={topPackage}>
+              {topPackage}
+            </h3>
+            <p className="text-[10px] text-forest-550 font-medium leading-relaxed mt-0.5">
+              Ranked top with <span className="font-bold text-forest-800">{topPackageCount} roster entries</span>
+            </p>
+          </div>
+          <div className="p-2.5 bg-amber-50 text-amber-800 rounded-xl border border-amber-100 shrink-0 ml-3">
+            <Award className="w-5 h-5" />
+          </div>
+        </div>
       </div>
 
       {/* Tabs navigation */}

@@ -411,6 +411,11 @@ export default function App() {
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         initialMode={authModalMode}
+        onSuccess={(authenticatedUser) => {
+          if (authenticatedUser && authenticatedUser.role === 'admin') {
+            handleNavigateWithScroll('admin');
+          }
+        }}
       />
 
     </div>
