@@ -143,11 +143,8 @@ export default function BookingForm({ packages, selectedPackage, onPackageSelect
         </div>
         <div>
           <h3 className="font-serif text-3xl font-bold tracking-tight text-forest-900">
-            Murakoze Cane!
+            Thank you, Murakoze!
           </h3>
-          <p className="text-sm text-forest-700 mt-2 font-medium">
-            (Thank you very much)
-          </p>
           <p className="text-sm text-forest-600 mt-3 max-w-md mx-auto leading-relaxed">
             Your booking request for <span className="font-bold text-forest-900">{activePackage?.title}</span> is registered. Our professional primates expert will email your itinerary within 24 hours.
           </p>

@@ -394,15 +394,7 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
 
                 </div>
 
-                {/* Speical requests detail */}
-                {activeTicket.specialRequests && (
-                  <div className="p-3.5 bg-sand-50 border border-forest-50 rounded-xl text-xs space-y-1">
-                    <span className="text-[8.5px] font-mono text-stone-400 uppercase block tracking-wider">Special Ranger Requests</span>
-                    <p className="text-forest-750 font-light leading-snug">{activeTicket.specialRequests}</p>
-                  </div>
-                )}
-
-                {/* Bottom decorative Barcode elements */}
+                 {/* Bottom decorative Barcode elements */}
                 <div className="border-t border-forest-100 pt-5 text-center space-y-3.5">
                   <div className="flex flex-col items-center justify-center space-y-1">
                     {/* Simulated elegant vector vertical barcode lines */}
@@ -411,14 +403,7 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
                         <span key={idx} className="bg-forest-950 inline-block h-full" style={{ width: `${w}px` }}></span>
                       ))}
                     </div>
-                    <span className="text-[9px] font-mono text-forest-650 tracking-widest">
-                      *HGR-REG-{activeTicket.id.split('_')[1] || activeTicket.id.slice(0, 6)}*
-                    </span>
                   </div>
-
-                  <p className="text-[9px] text-stone-400 leading-normal max-w-sm mx-auto">
-                    This document certifies that your environmental fees are wired. Carry this printed voucher copies along with valid passport identification to the Kinigi Headquarters base camps for 6:20 AM briefing.
-                  </p>
                 </div>
 
               </div>

@@ -124,14 +124,7 @@ export default function BookingPage({
 
     setIsSubmitting(true);
     try {
-      // Format details of addons or custom tier config so admins see it inside specialRequests if needed, or totalCost fits.
-      let requestsWithSetup = specialRequests;
-      if (configuredSetup) {
-        const addonText = configuredSetup.addons.length > 0 
-          ? `[Addons: ${configuredSetup.addons.join(', ')}]` 
-          : '[No Addons]';
-        requestsWithSetup = `${requestsWithSetup} | Tier Type: ${configuredSetup.tierLevel.toUpperCase()} | ${addonText}`.trim();
-      }
+      const requestsWithSetup = specialRequests;
 
       const assignedUserId = currentUser?.uid || 'guest';
 
@@ -502,7 +495,7 @@ export default function BookingPage({
             <div className="space-y-2">
               <span className="text-[10px] font-mono tracking-widest text-[#94743b] font-bold uppercase block">Expedition Confirmed</span>
               <h3 className="font-serif text-3xl font-bold text-forest-900 leading-tight">
-                Murakoze Cane!
+                Thank you, Murakoze!
               </h3>
               <p className="text-xs text-forest-650 max-w-md mx-auto leading-relaxed font-light">
                 We have registered your tracking variables under reservation ticket <b>#{successBooking.id.split('_')[1] || successBooking.id.slice(0, 6)}</b>. Official forest permit vouchers are wired and mapping complete.
