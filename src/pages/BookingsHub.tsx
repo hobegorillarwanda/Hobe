@@ -404,15 +404,6 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
                       {activeTicket.id}
                     </span>
                   </div>
-                  
-                  <div className="max-w-sm mx-auto p-3 bg-stone-50 border border-stone-200 rounded-xl space-y-0.5">
-                    <span className="text-[8px] font-mono text-forest-750 font-bold uppercase tracking-wider block">
-                      Admin Tracking Portal
-                    </span>
-                    <p className="text-[9.5px] text-stone-500 leading-normal font-light">
-                      Certified rangers and admin teams track and manage this record under the <span className="font-semibold text-forest-900 font-sans">Admin Panel</span> inside the <span className="font-semibold text-forest-950">Bookings Manager</span> tab.
-                    </p>
-                  </div>
                 </div>
 
               </div>
