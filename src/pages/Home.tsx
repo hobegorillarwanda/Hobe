@@ -231,20 +231,20 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
     <div className="space-y-0">
       
       {/* 1. HERO HEADER */}
-      <header className="relative bg-forest-900 text-white min-h-[90vh] flex items-center justify-center px-6 py-24 overflow-hidden">
+      <header className="relative bg-emerald-50 text-forest-950 min-h-[90vh] flex items-center justify-center px-6 py-24 overflow-hidden">
         {/* Real Mountain Gorilla Background Image */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none">
           <img 
             src="/assets/images/mountain_gorilla_1781279668251.jpg" 
             alt="Majestic Mountain Gorilla" 
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover opacity-25 object-center mix-blend-luminosity brightness-90 animate-pulse duration-10000"
+            className="w-full h-full object-cover opacity-85 object-center"
           />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-900/85 to-forest-950/50 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-emerald-50/70 z-10"></div>
         {/* Decorative ambient blur elements */}
-        <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-forest-750/30 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-1/4 right-1/10 w-120 h-120 bg-sand-700/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-emerald-300/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-1/4 right-1/10 w-120 h-120 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-4xl mx-auto text-center relative z-20 space-y-8">
           <motion.div 
@@ -253,23 +253,23 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             transition={{ duration: 0.6 }}
             className="flex items-center justify-center gap-2 mb-2"
           >
-            <span className="w-1.5 h-1.5 bg-sand-600 rounded-full"></span>
-            <span className="text-xs font-bold tracking-widest text-sand-200 uppercase font-mono">
+            <span className="w-1.5 h-1.5 bg-forest-600 rounded-full"></span>
+            <span className="text-xs font-bold tracking-widest text-forest-800 bg-emerald-100/70 px-4 py-1.5 rounded-full border border-forest-200/50 uppercase font-mono">
               Authorized Eco-Luxury Safari Partner
             </span>
-            <span className="w-1.5 h-1.5 bg-sand-600 rounded-full"></span>
+            <span className="w-1.5 h-1.5 bg-forest-600 rounded-full"></span>
           </motion.div>
 
           <motion.h1 
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-white leading-[1.1]"
+            className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-forest-950 leading-[1.1]"
           >
             Witness the Majesty of <br/>
-            <span className="text-sand-100 font-serif italic inline-flex items-center min-h-[1.25em]">
+            <span className="text-forest-850 font-serif italic inline-flex items-center min-h-[1.25em]">
               {currentText}
-              <span className="w-1.5 h-[0.9em] bg-sand-200 ml-2.5 animate-pulse inline-block rounded"></span>
+              <span className="w-1.5 h-[0.9em] bg-forest-800 ml-2.5 animate-pulse inline-block rounded"></span>
             </span>
           </motion.h1>
 
@@ -277,7 +277,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.25 }}
-            className="text-sm md:text-base text-forest-100 max-w-2xl mx-auto leading-relaxed font-light"
+            className="text-sm md:text-base text-forest-800 max-w-2xl mx-auto leading-relaxed font-normal"
           >
             Embark on a soul-stirring, fully customized safari through Rwanda's mist-shrouded bamboo rainforests and pristine savanna horizons. Led by certified park guides.
           </motion.p>
@@ -290,15 +290,15 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
           >
             <button
               onClick={() => onNavigate('destinations')}
-              className="w-full sm:w-auto px-8 py-3.5 bg-sand-600 hover:bg-sand-700 text-forest-950 font-bold rounded-xl text-xs uppercase tracking-wider shadow-sm transition-all text-center cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 bg-forest-800 hover:bg-forest-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-sm transition-all text-center cursor-pointer"
             >
               Explore National Parks
             </button>
             <button
               onClick={() => onNavigate('packages')}
-              className="w-full sm:w-auto px-8 py-3.5 bg-white/10 hover:bg-white/15 border border-white/20 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition text-center cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 bg-white hover:bg-forest-50 border border-forest-200 text-forest-900 font-bold rounded-xl text-xs uppercase tracking-wider transition text-center cursor-pointer"
             >
-              Configure Safari Tiers
+              View Safari Tiers
             </button>
           </motion.div>
 
@@ -307,22 +307,22 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto border-t border-white/10 text-xs font-mono text-forest-200"
+            className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto border-t border-forest-200 text-xs font-mono text-forest-750"
           >
             <div className="space-y-1">
-              <span className="block text-xl font-bold font-serif text-sand-100">100%</span>
+              <span className="block text-xl font-extrabold font-serif text-forest-900">100%</span>
               <span className="uppercase tracking-wider text-[10px]">Zero-Trace Ecotourism</span>
             </div>
             <div className="space-y-1">
-              <span className="block text-xl font-bold font-serif text-sand-100">$1,500</span>
+              <span className="block text-xl font-extrabold font-serif text-forest-900">$1,500</span>
               <span className="uppercase tracking-wider text-[10px]">Permits Contribution</span>
             </div>
             <div className="space-y-1">
-              <span className="block text-xl font-bold font-serif text-sand-100">1/3</span>
+              <span className="block text-xl font-extrabold font-serif text-forest-900">1/3</span>
               <span className="uppercase tracking-wider text-[10px]">Global Gorilla Share</span>
             </div>
             <div className="space-y-1">
-              <span className="block text-xl font-bold font-serif text-sand-100">24hr</span>
+              <span className="block text-xl font-extrabold font-serif text-forest-900">24hr</span>
               <span className="uppercase tracking-wider text-[10px]">Swift Permits Registry</span>
             </div>
           </motion.div>
@@ -333,35 +333,35 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
       <AboutSection onNavigate={onNavigate} />
 
       {/* EXEXCLUSIVE WILDLIFE & LANDSCAPE PORTFOLIO SHOWCASE */}
-      <section className="py-24 bg-forest-950 text-white relative overflow-hidden">
+      <section className="py-24 bg-white text-forest-950 relative overflow-hidden border-b border-forest-100/50">
         {/* Ambient atmospheric highlights */}
-        <div className="absolute top-1/2 left-0 w-96 h-96 bg-sand-700/5 rounded-full blur-3xl -translate-x-1/2 -to-y-1/2 pointer-events-none"></div>
-        <div className="absolute bottom-0 right-1/4 w-120 h-120 bg-forest-800/25 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-50/50 rounded-full blur-3xl -translate-x-1/2 pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-120 h-120 bg-emerald-100/20 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10 space-y-16">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div className="space-y-4 max-w-xl text-left">
-              <span className="text-xs font-bold tracking-widest text-sand-200 uppercase bg-forest-900 px-3.5 py-1.5 rounded-full border border-forest-800 inline-block font-mono">
+              <span className="text-xs font-bold tracking-widest text-forest-800 uppercase bg-emerald-50 px-3.5 py-1.5 rounded-full border border-forest-100 inline-block font-mono">
                 The Rwanda Portfolio
               </span>
-              <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">
+              <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-forest-900 leading-tight">
                 Scenic Wonders & <br/>
-                <span className="text-sand-100 font-serif italic">Wild Sanctuary</span>
+                <span className="text-forest-700 font-serif italic">Wild Sanctuary</span>
               </h2>
-              <p className="text-xs text-forest-200 font-light leading-relaxed">
+              <p className="text-xs text-forest-650 font-light leading-relaxed">
                 Peer inside the incredible biological diversity of Rwanda. Witness ancient high-altitude primates alongside breathtaking fresh volcanic water basins and savanna wetlands.
               </p>
             </div>
 
             {/* Premium Tab Toggles */}
-            <div className="flex bg-forest-900 border border-forest-800/80 p-1.5 rounded-2xl w-fit self-start">
+            <div className="flex bg-forest-50 border border-forest-200 p-1.5 rounded-2xl w-fit self-start">
               <button
                 type="button"
                 onClick={() => setShowcaseTab('wildlife')}
-                className={`py-2 px-5 rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer ${
+                className={`py-2 px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
                   showcaseTab === 'wildlife' 
-                    ? 'bg-sand-600 text-forest-950 shadow-sm' 
-                    : 'text-forest-200 hover:text-white'
+                    ? 'bg-forest-800 text-white shadow-sm' 
+                    : 'text-forest-650 hover:text-forest-900'
                 }`}
               >
                 Rare Wildlife
@@ -369,10 +369,10 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
               <button
                 type="button"
                 onClick={() => setShowcaseTab('places')}
-                className={`py-2 px-5 rounded-xl text-xs font-semibold uppercase tracking-wider transition cursor-pointer ${
+                className={`py-2 px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
                   showcaseTab === 'places' 
-                    ? 'bg-sand-600 text-forest-950 shadow-sm' 
-                    : 'text-forest-200 hover:text-white'
+                    ? 'bg-forest-800 text-white shadow-sm' 
+                    : 'text-forest-650 hover:text-forest-900'
                 }`}
               >
                 Sacred Places
@@ -390,7 +390,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.4 }}
-                  className="group relative bg-forest-900/45 border border-forest-800/60 rounded-3xl overflow-hidden shadow-luxury flex flex-col justify-between h-[420px]"
+                  className="group relative bg-white border border-forest-100/80 rounded-3xl overflow-hidden shadow-luxury-hover transition-all duration-300 flex flex-col justify-between h-[420px]"
                 >
                   {/* Photo Layer */}
                   <div className="h-60 overflow-hidden relative">
@@ -400,8 +400,8 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/20 to-transparent"></div>
-                    <span className="absolute bottom-3 left-4 text-[10px] font-mono tracking-wider font-bold text-sand-300 uppercase bg-forest-950/70 py-1 px-2.5 rounded backdrop-blur-sm border border-white/5">
+                    <div className="absolute inset-0 bg-gradient-to-t from-forest-950/40 via-transparent to-transparent"></div>
+                    <span className="absolute bottom-3 left-4 text-[10px] font-mono tracking-wider font-bold text-forest-900 uppercase bg-white/95 py-1 px-2.5 rounded shadow-sm border border-forest-100/40">
                       {item.location}
                     </span>
                   </div>
@@ -409,10 +409,10 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                   {/* Text Details Layer */}
                   <div className="p-5 flex-1 flex flex-col justify-between text-left">
                     <div className="space-y-1.5">
-                      <h4 className="font-serif text-lg font-bold text-sand-100 group-hover:text-sand-50 transition-colors">
+                      <h4 className="font-serif text-lg font-bold text-forest-900 group-hover:text-forest-850 transition-colors">
                         {item.name}
                       </h4>
-                      <p className="text-xs text-forest-200 font-light leading-relaxed">
+                      <p className="text-xs text-forest-650 font-normal leading-relaxed">
                         {item.description}
                       </p>
                     </div>
@@ -420,7 +420,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                     <button
                       type="button"
                       onClick={() => onNavigate('destinations')}
-                      className="text-[10px] font-mono tracking-widest font-bold text-sand-400 hover:text-white uppercase flex items-center gap-1.5 transition-colors self-start cursor-pointer mt-3"
+                      className="text-[10px] font-mono tracking-widest font-bold text-forest-700 hover:text-forest-950 uppercase flex items-center gap-1.5 transition-colors self-start cursor-pointer mt-3"
                     >
                       <span>Explore Region</span>
                       <span>&rarr;</span>
@@ -617,19 +617,23 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
       </section>
 
       {/* 5. PARALLAX CALL-TO-ACTION */}
-      <section className="bg-gradient-to-br from-forest-900 to-forest-950 text-white py-20 px-6 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-emerald-50 to-sand-100/60 text-forest-950 py-20 px-6 relative overflow-hidden border-t border-forest-100/50">
         <div className="absolute inset-0 bg-transparent opacity-80 pointer-events-none"></div>
+        {/* Ambient atmospheric highlights */}
+        <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-emerald-100/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-sand-200/20 rounded-full blur-3xl pointer-events-none"></div>
+        
         <div className="max-w-4xl mx-auto text-center relative z-10 space-y-6">
-          <h2 className="font-serif text-3xl md:text-5xl font-bold text-white tracking-tight">
-            Ready to Stand in the mists of Virunga?
+          <h2 className="font-serif text-3xl md:text-5xl font-bold text-forest-900 tracking-tight">
+            Ready to Stand in the Mists of Virunga?
           </h2>
-          <p className="text-sm text-forest-100 max-w-xl mx-auto leading-relaxed font-light">
-            Licenses are severely limited and often book out 4-6 months in advance. Secure your tracking permits now under the premium guidance of authorized conservation coordinators.
+          <p className="text-sm text-forest-750 max-w-xl mx-auto leading-relaxed font-normal">
+            Permits are strictly limited to protect mountain gorillas and often book out 4-6 months in advance. Secure your tracking permits now under the premium guidance of authorized conservation coordinators.
           </p>
           <div className="pt-4">
             <button
               onClick={() => onNavigate('booking')}
-              className="py-3.5 px-8 bg-sand-600 hover:bg-sand-700 text-forest-950 font-bold rounded-xl text-xs uppercase tracking-wider transition shadow-sm cursor-pointer"
+              className="py-3.5 px-8 bg-forest-800 hover:bg-forest-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider transition shadow-sm cursor-pointer"
             >
               Start Permits Application
             </button>
