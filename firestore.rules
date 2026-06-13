@@ -26,7 +26,7 @@ service cloud.firestore {
     }
 
     function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches("^[a-zA-Z0-9_\\\\-]+$");
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_-]+$');
     }
 
     function incoming() {
@@ -72,20 +72,19 @@ service cloud.firestore {
 
     function isValidBooking(data) {
       return data.keys().hasAll(["id", "userId", "fullName", "email", "phone", "travelDate", "passengerCount", "specialRequests", "packageId", "packageName", "totalCost", "status", "createdAt"]) &&
-             data.keys().size() == 13 &&
              data.id is string && data.id.size() <= 64 &&
              data.userId is string && data.userId.size() <= 128 &&
              data.fullName is string && data.fullName.size() <= 128 &&
              data.email is string && data.email.size() <= 128 &&
-             data.phone is string && data.phone.size() <= 32 &&
-             data.travelDate is string && data.travelDate.size() <= 16 &&
-             data.passengerCount is int && data.passengerCount > 0 && data.passengerCount <= 100 &&
+             data.phone is string && data.phone.size() <= 64 &&
+             data.travelDate is string && data.travelDate.size() <= 64 &&
+             (data.passengerCount is int || data.passengerCount is float) && data.passengerCount > 0 && data.passengerCount <= 100 &&
              data.specialRequests is string && data.specialRequests.size() <= 2000 &&
              data.packageId is string && data.packageId.size() <= 64 &&
              data.packageName is string && data.packageName.size() <= 128 &&
              (data.totalCost is int || data.totalCost is float) && data.totalCost >= 0 &&
              data.status is string && (data.status == "Pending" || data.status == "Confirmed" || data.status == "Cancelled") &&
-             data.createdAt is string && data.createdAt.size() <= 32;
+             data.createdAt is string && data.createdAt.size() <= 64;
     }
 
     // --- Rules for Users ---
