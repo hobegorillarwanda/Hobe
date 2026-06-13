@@ -364,8 +364,8 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
                   </div>
 
                   <div className="space-y-1 bg-sand-50/50 p-3 rounded-lg border border-forest-50">
-                    <span className="text-[8px] text-stone-400 uppercase block">PERMIT SERIAL BARCODE</span>
-                    <p className="font-bold text-forest-900 uppercase">HGR-{activeTicket.id.split('_')[1] || activeTicket.id.slice(0, 8)}</p>
+                    <span className="text-[8px] text-stone-400 uppercase block">TRACKING ID</span>
+                    <p className="font-bold text-forest-900 uppercase truncate">HGR-{activeTicket.id.split('_')[1] || activeTicket.id.slice(0, 8)}</p>
                   </div>
 
                   <div className="space-y-1 bg-sand-50/50 p-3 rounded-lg border border-forest-50">
@@ -394,15 +394,24 @@ export default function BookingsHub({ currentUser, onNavigate, onTriggerAuth }: 
 
                 </div>
 
-                 {/* Bottom decorative Barcode elements */}
-                <div className="border-t border-forest-100 pt-5 text-center space-y-3.5">
-                  <div className="flex flex-col items-center justify-center space-y-1">
-                    {/* Simulated elegant vector vertical barcode lines */}
-                    <div className="flex items-center gap-px h-9 opacity-75">
-                      {[1,3,1,2,5,1,3,2,1,4,2,1,5,2,1,3,4,1,2,1,4,1,3,1,5,2,1,4,1,2].map((w, idx) => (
-                        <span key={idx} className="bg-forest-950 inline-block h-full" style={{ width: `${w}px` }}></span>
-                      ))}
-                    </div>
+                 {/* Bottom Tracking & Admin Details */}
+                <div className="border-t border-forest-100 pt-5 text-center space-y-4">
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-mono text-stone-400 uppercase tracking-widest block">
+                      Permit Tracking Key
+                    </span>
+                    <span className="font-mono text-xs font-bold text-forest-950 bg-sand-50/50 px-3 py-1 rounded-md border border-forest-100 select-all block w-fit mx-auto">
+                      {activeTicket.id}
+                    </span>
+                  </div>
+                  
+                  <div className="max-w-sm mx-auto p-3 bg-stone-50 border border-stone-200 rounded-xl space-y-0.5">
+                    <span className="text-[8px] font-mono text-forest-750 font-bold uppercase tracking-wider block">
+                      Admin Tracking Portal
+                    </span>
+                    <p className="text-[9.5px] text-stone-500 leading-normal font-light">
+                      Certified rangers and admin teams track and manage this record under the <span className="font-semibold text-forest-900 font-sans">Admin Panel</span> inside the <span className="font-semibold text-forest-950">Bookings Manager</span> tab.
+                    </p>
                   </div>
                 </div>
 
