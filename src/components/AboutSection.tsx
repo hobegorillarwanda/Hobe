@@ -67,30 +67,30 @@ export default function AboutSection({ onNavigate }: AboutSectionProps) {
           </div>
 
           {/* Interactive Signature Route Section */}
-          <div className="lg:col-span-7 bg-blue-900 p-8 rounded-3xl border border-blue-850 relative shadow-md text-white">
+          <div className="lg:col-span-7 bg-forest-900 p-8 rounded-3xl border border-forest-850 relative shadow-md text-white">
             <div className="flex items-center gap-3 mb-6">
-              <Milestone className="w-6 h-6 text-blue-300" />
+              <Milestone className="w-6 h-6 text-emerald-300" />
               <div>
                 <h3 className="font-serif text-2xl font-bold text-white">
                   {SIGNATURE_ITINERARY.title}
                 </h3>
-                <p className="text-xs text-blue-200 uppercase tracking-widest font-mono font-bold">
+                <p className="text-xs text-emerald-200 uppercase tracking-widest font-mono font-bold">
                   The Complete Primate Expedition
                 </p>
               </div>
             </div>
 
-            <div className="relative border-l border-blue-800/80 ml-4 space-y-8 py-2">
+            <div className="relative border-l border-forest-800/80 ml-4 space-y-8 py-2">
               {SIGNATURE_ITINERARY.steps.map((step, idx) => (
                 <div key={idx} className="relative pl-8 group">
                   {/* Timeline Dot Indicator */}
-                  <div className="absolute left-0 -translate-x-1/2 top-1.5 w-3 h-3 bg-blue-300 rounded-full border-2 border-blue-900 group-hover:bg-white transition-colors duration-300"></div>
+                  <div className="absolute left-0 -translate-x-1/2 top-1.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-forest-900 group-hover:bg-white transition-colors duration-300"></div>
                   
                   <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1.5">
-                    <span className="font-mono text-[10px] font-bold text-blue-100 uppercase bg-blue-855 px-2 py-0.5 rounded border border-blue-750 inline-block max-w-fit">
+                    <span className="font-mono text-[10px] font-bold text-emerald-100 uppercase bg-forest-800 px-2 py-0.5 rounded border border-forest-755 inline-block max-w-fit">
                       {step.days}
                     </span>
-                    <span className="text-xs font-semibold text-blue-200">
+                    <span className="text-xs font-semibold text-emerald-200">
                       {step.destination}
                     </span>
                   </div>
@@ -102,14 +102,14 @@ export default function AboutSection({ onNavigate }: AboutSectionProps) {
               ))}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-blue-800/80 flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-2.5 text-xs text-blue-200">
-                <Heart className="w-4 h-4 text-blue-300 fill-blue-300/10 animate-pulse" />
+            <div className="mt-8 pt-6 border-t border-forest-800/80 flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-2.5 text-xs text-emerald-200">
+                <Heart className="w-4 h-4 text-emerald-400 fill-emerald-400/10" />
                 <span>Private Customized Itineraries Available</span>
               </div>
               <button 
                 onClick={() => onNavigate('booking')}
-                className="text-xs text-blue-200 hover:text-white font-bold underline uppercase tracking-widest transition cursor-pointer text-left font-mono"
+                className="text-xs text-emerald-200 hover:text-white font-bold underline uppercase tracking-widest transition cursor-pointer text-left font-mono"
               >
                 Request Custom Quotation &rarr;
               </button>
