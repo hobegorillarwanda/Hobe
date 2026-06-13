@@ -21,9 +21,11 @@ export default function Navbar({ currentUser, onLogout, currentRoute, onChangeRo
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  const [authModalRole, setAuthModalRole] = useState<'customer' | 'admin'>('customer');
 
   const triggerAuth = (mode: 'login' | 'register') => {
     setAuthModalMode(mode);
+    setAuthModalRole('customer');
     setAuthModalOpen(true);
     setMobileMenuOpen(false);
   };
@@ -273,6 +275,7 @@ export default function Navbar({ currentUser, onLogout, currentRoute, onChangeRo
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         initialMode={authModalMode}
+        initialRoleTab={authModalRole}
       />
     </>
   );

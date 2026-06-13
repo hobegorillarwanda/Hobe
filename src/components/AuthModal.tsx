@@ -12,9 +12,11 @@ interface AuthModalProps {
   onClose: () => void;
   onSuccess?: (user: any) => void;
   initialMode?: 'login' | 'register';
+  initialRoleTab?: 'customer' | 'admin';
 }
 
-export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login' }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login', initialRoleTab = 'customer' }: AuthModalProps) {
+  const [roleTab, setRoleTab] = useState<'customer' | 'admin'>(initialRoleTab);
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,12 +25,21 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
 
   React.useEffect(() => {
     if (isOpen) {
-      setMode(initialMode);
+      setRoleTab(initialRoleTab);
+      setMode(initialRoleTab === 'admin' ? 'login' : initialMode);
       setError('');
       setEmail('');
       setPassword('');
     }
-  }, [isOpen, initialMode]);
+  }, [isOpen, initialMode, initialRoleTab]);
+
+  // Force login mode and correct admin role behavior if admin email is typed
+  React.useEffect(() => {
+    if (email.trim().toLowerCase() === 'hobegorillarwanda@gmail.com') {
+      setRoleTab('admin');
+      setMode('login');
+    }
+  }, [email]);
 
   if (!isOpen) return null;
 
@@ -40,6 +51,22 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
     }
     setLoading(true);
     setError('');
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const isAdminEmail = normalizedEmail === 'hobegorillarwanda@gmail.com';
+
+    // Guard to ensure Admin can only login inside the Admin context / tab
+    if (roleTab === 'admin' && !isAdminEmail) {
+      setError('This access portal is exclusively for System Administrators. Please log in through the Customer tab.');
+      setLoading(false);
+      return;
+    }
+
+    if (roleTab === 'customer' && isAdminEmail) {
+      setError('Administrator detected! Please switch to the Admin Workspace tab to authenticate securely.');
+      setLoading(false);
+      return;
+    }
 
     try {
       let user;
@@ -78,21 +105,62 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
         className="w-full max-w-md bg-sand-50 rounded-2xl border border-forest-100 overflow-hidden shadow-luxury animate-in fade-in zoom-in-95 duration-200"
       >
         {/* Banner */}
-        <div className="relative bg-forest-700 p-6 text-white text-center font-sans">
+        <div className={`relative p-6 text-white text-center font-sans ${roleTab === 'admin' ? 'bg-red-800' : 'bg-forest-700'}`}>
           <button 
             id="close-auth-btn"
             onClick={onClose}
-            className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-forest-600 text-white/80 hover:text-white transition-colors"
+            className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-black/15 text-white/80 hover:text-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
           
           <h3 className="font-serif text-2xl font-bold tracking-tight text-sand-100 mt-2">
-            {mode === 'register' ? 'Create Account' : 'Sign In to Account'}
+            {roleTab === 'admin' 
+              ? 'Administrator Workspace' 
+              : (mode === 'register' ? 'Create Account' : 'Sign In to Account')
+            }
           </h3>
-          <p className="text-xs text-forest-100 mt-1 font-sans">
-            {mode === 'register' ? 'Register today to book and secure custom Gorilla permit bookings' : 'Access customized itineraries and Gorilla tracking logs'}
+          <p className="text-xs text-shades-50/90 mt-1 font-sans">
+            {roleTab === 'admin'
+              ? 'Enter security credentials to access administrative systems'
+              : (mode === 'register' ? 'Register today to book and secure custom Gorilla permit bookings' : 'Access customized itineraries and Gorilla tracking logs')
+            }
           </p>
+        </div>
+
+        {/* Role Selector Tabs (Two authentications) */}
+        <div className="flex border-b border-forest-100 bg-sand-100 p-1">
+          <button
+            id="auth-customer-tab-btn"
+            type="button"
+            onClick={() => {
+              setRoleTab('customer');
+              setError('');
+            }}
+            className={`flex-1 py-2 text-center text-xs font-bold tracking-wider uppercase rounded-lg transition-all ${
+              roleTab === 'customer'
+                ? 'bg-forest-700 text-white shadow-sm'
+                : 'text-forest-700 hover:bg-forest-50 hover:text-forest-900 cursor-pointer'
+            }`}
+          >
+            🏔️ Customer Sign-In
+          </button>
+          <button
+            id="auth-admin-tab-btn"
+            type="button"
+            onClick={() => {
+              setRoleTab('admin');
+              setMode('login');
+              setError('');
+            }}
+            className={`flex-1 py-1.5 text-center text-xs font-bold tracking-wider uppercase rounded-lg transition-all ${
+              roleTab === 'admin'
+                ? 'bg-red-700 text-white shadow-sm'
+                : 'text-forest-700 hover:bg-forest-50 hover:text-forest-900 cursor-pointer'
+            }`}
+          >
+            🔑 Admin Control
+          </button>
         </div>
 
         <div className="p-6">
@@ -158,22 +226,24 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
           </form>
 
           {/* Toggle mode link */}
-          <div className="mt-4 text-center">
-            <button
-              id="auth-toggle-mode-btn"
-              type="button"
-              className="text-xs text-forest-700 hover:text-forest-900 font-semibold underline underline-offset-2 cursor-pointer"
-              onClick={() => {
-                setMode(mode === 'login' ? 'register' : 'login');
-                setError('');
-              }}
-            >
-              {mode === 'login' 
-                ? "Don't have an credentials account? Register here" 
-                : "Already have an account? Sign In here"
-              }
-            </button>
-          </div>
+          {roleTab === 'customer' && (
+            <div className="mt-4 text-center">
+              <button
+                id="auth-toggle-mode-btn"
+                type="button"
+                className="text-xs text-forest-700 hover:text-forest-900 font-semibold underline underline-offset-2 cursor-pointer"
+                onClick={() => {
+                  setMode(mode === 'login' ? 'register' : 'login');
+                  setError('');
+                }}
+              >
+                {mode === 'login' 
+                  ? "Don't have an credentials account? Register here" 
+                  : "Already have an account? Sign In here"
+                }
+              </button>
+            </div>
+          )}
 
           {/* Social Divider */}
           <div className="relative my-6 text-center">

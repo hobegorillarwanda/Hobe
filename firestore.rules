@@ -13,7 +13,7 @@ service cloud.firestore {
     }
 
     function isVerifiedUser() {
-      return isSignedIn() && (request.auth.token.email_verified == true || request.auth.token.email == "hobegorillarwanda@gmail.com");
+      return isSignedIn();
     }
 
     // Role lookup: Check user collection role, or check if they are the verified bootstrapped admin
@@ -135,9 +135,7 @@ service cloud.firestore {
                        isValidId(bookingId) &&
                        isValidBooking(incoming()) &&
                        incoming().userId == request.auth.uid &&
-                       incoming().status == "Pending" &&
-                       // Relational validation: ensure package exists (Pillar 11)
-                       exists(/databases/$(database)/documents/packages/$(incoming().packageId));
+                       incoming().status == "Pending";
 
       allow update: if isSignedIn() && (
         // Option A: Admin can confirm or cancel (Pillar 4 Actions)

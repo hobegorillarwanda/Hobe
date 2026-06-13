@@ -84,6 +84,7 @@ export default function App() {
   // Floating Auth modal states
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  const [authModalRole, setAuthModalRole] = useState<'customer' | 'admin'>('customer');
 
   // 1. Subscribe to Auth status changes
   useEffect(() => {
@@ -167,6 +168,7 @@ export default function App() {
 
   const handleTriggerAuthModal = () => {
     setAuthModalMode('login');
+    setAuthModalRole('customer');
     setAuthModalOpen(true);
   };
 
@@ -389,6 +391,7 @@ export default function App() {
                   handleNavigateWithScroll('admin');
                 } else {
                   setAuthModalMode('login');
+                  setAuthModalRole('admin');
                   setAuthModalOpen(true);
                 }
               }}
@@ -411,6 +414,7 @@ export default function App() {
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         initialMode={authModalMode}
+        initialRoleTab={authModalRole}
         onSuccess={(authenticatedUser) => {
           if (authenticatedUser && authenticatedUser.role === 'admin') {
             handleNavigateWithScroll('admin');
