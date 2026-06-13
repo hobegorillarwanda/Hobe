@@ -341,35 +341,35 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
       <AboutSection onNavigate={onNavigate} />
 
       {/* EXEXCLUSIVE WILDLIFE & LANDSCAPE PORTFOLIO SHOWCASE */}
-      <section className="py-24 bg-white text-forest-950 relative overflow-hidden border-b border-forest-100/50">
+      <section className="py-24 bg-forest-950 text-white relative overflow-hidden border-b border-forest-900/40">
         {/* Ambient atmospheric highlights */}
-        <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-50/50 rounded-full blur-3xl -translate-x-1/2 pointer-events-none"></div>
-        <div className="absolute bottom-0 right-1/4 w-120 h-120 bg-emerald-100/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute top-1/2 left-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -translate-x-1/2 pointer-events-none"></div>
+        <div className="absolute bottom-0 right-1/4 w-120 h-120 bg-[#a9ca94]/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10 space-y-16">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div className="space-y-4 max-w-xl text-left">
-              <span className="text-xs font-bold tracking-widest text-forest-800 uppercase bg-emerald-50 px-3.5 py-1.5 rounded-full border border-forest-100 inline-block font-mono">
+            <div className="space-y-4 max-w-xl text-left border-l-2 border-sand-600/50 pl-5">
+              <span className="text-[10px] font-mono tracking-widest text-[#a9ca94] font-bold uppercase bg-forest-900/85 px-3.5 py-1.5 rounded-full border border-forest-800 inline-block">
                 The Rwanda Portfolio
               </span>
-              <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-forest-900 leading-tight">
+              <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">
                 Scenic Wonders & <br/>
-                <span className="text-forest-700 font-serif italic">Wild Sanctuary</span>
+                <span className="text-sand-400 font-serif italic">Wild Sanctuary</span>
               </h2>
-              <p className="text-xs text-forest-650 font-light leading-relaxed">
+              <p className="text-xs text-forest-200 font-light leading-relaxed">
                 Peer inside the incredible biological diversity of Rwanda. Witness ancient high-altitude primates alongside breathtaking fresh volcanic water basins and savanna wetlands.
               </p>
             </div>
 
-            {/* Premium Tab Toggles */}
-            <div className="flex bg-forest-50 border border-forest-200 p-1.5 rounded-2xl w-fit self-start">
+            {/* Premium Tab Toggles - adjusted style for green bg */}
+            <div className="flex bg-forest-905 border border-forest-800 p-1.5 rounded-2xl w-fit self-start shadow-inner">
               <button
                 type="button"
                 onClick={() => setShowcaseTab('wildlife')}
                 className={`py-2 px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
                   showcaseTab === 'wildlife' 
-                    ? 'bg-forest-800 text-white shadow-sm' 
-                    : 'text-forest-650 hover:text-forest-900'
+                    ? 'bg-sand-605 text-forest-950 font-extrabold shadow-sm' 
+                    : 'text-forest-200 hover:text-white'
                 }`}
               >
                 Rare Wildlife
@@ -379,8 +379,8 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                 onClick={() => setShowcaseTab('places')}
                 className={`py-2 px-5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
                   showcaseTab === 'places' 
-                    ? 'bg-forest-800 text-white shadow-sm' 
-                    : 'text-forest-650 hover:text-forest-900'
+                    ? 'bg-sand-605 text-forest-950 font-extrabold shadow-sm' 
+                    : 'text-forest-200 hover:text-white'
                 }`}
               >
                 Sacred Places
@@ -398,7 +398,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.4 }}
-                  className="group relative bg-white border border-forest-100/80 rounded-3xl overflow-hidden shadow-luxury-hover transition-all duration-300 flex flex-col justify-between h-[420px]"
+                  className="group relative bg-forest-900 border border-forest-800/80 rounded-3xl overflow-hidden shadow-luxury transition-all duration-300 flex flex-col justify-between h-[420px] hover:border-sand-600/40"
                 >
                   {/* Photo Layer */}
                   <div className="h-60 overflow-hidden relative">
@@ -408,8 +408,8 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-forest-950/40 via-transparent to-transparent"></div>
-                    <span className="absolute bottom-3 left-4 text-[10px] font-mono tracking-wider font-bold text-forest-900 uppercase bg-white/95 py-1 px-2.5 rounded shadow-sm border border-forest-100/40">
+                    <div className="absolute inset-0 bg-gradient-to-t from-forest-950/60 via-transparent to-transparent"></div>
+                    <span className="absolute bottom-3 left-4 text-[9px] font-mono tracking-wider font-bold text-sand-200 uppercase bg-forest-950/90 py-1.5 px-3 rounded shadow-sm border border-forest-800">
                       {item.location}
                     </span>
                   </div>
@@ -417,10 +417,10 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                   {/* Text Details Layer */}
                   <div className="p-5 flex-1 flex flex-col justify-between text-left">
                     <div className="space-y-1.5">
-                      <h4 className="font-serif text-lg font-bold text-forest-900 group-hover:text-forest-850 transition-colors">
+                      <h4 className="font-serif text-lg font-bold text-white group-hover:text-sand-300 transition-colors">
                         {item.name}
                       </h4>
-                      <p className="text-xs text-forest-650 font-normal leading-relaxed">
+                      <p className="text-xs text-forest-200 font-light leading-relaxed">
                         {item.description}
                       </p>
                     </div>
@@ -428,7 +428,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                     <button
                       type="button"
                       onClick={() => onNavigate('destinations', item.destinationId)}
-                      className="text-[10px] font-mono tracking-widest font-bold text-forest-700 hover:text-forest-950 uppercase flex items-center gap-1.5 transition-colors self-start cursor-pointer mt-3"
+                      className="text-[10px] font-mono tracking-widest font-bold text-sand-400 hover:text-sand-200 uppercase flex items-center gap-1.5 transition-colors self-start cursor-pointer mt-3"
                     >
                       <span>Explore Region</span>
                       <span>&rarr;</span>
@@ -578,51 +578,57 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
       </section>
 
       {/* 4. VALUE PROPOSITION STATEMENTS */}
-      <section className="py-24 max-w-7xl mx-auto px-6 space-y-16">
-        <div className="text-center space-y-4">
-          <span className="text-xs font-bold tracking-widest text-forest-700 uppercase bg-forest-100 px-3 py-1.5 rounded-full border border-forest-200/50 inline-block font-mono">
-            Unrivaled Quality
-          </span>
-          <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-forest-900">
-            Why Expedition with Hobe Gorilla
-          </h2>
-          <p className="text-xs text-forest-650 max-w-md mx-auto font-light leading-relaxed">
-            Highly personalized luxury hospitality designed synchronously around severe environmental conservation rules.
-          </p>
-        </div>
+      <div className="bg-forest-900 text-white py-24 border-y border-forest-800/80 relative overflow-hidden">
+        {/* Dynamic ambient vector details */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-700/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-sand-600/5 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white p-8 rounded-3xl border border-forest-100 shadow-luxury space-y-5">
-            <div className="w-12 h-12 bg-forest-50 border border-forest-150 rounded-2xl flex items-center justify-center text-forest-700">
-              <Star className="w-6 h-6 fill-forest-200" />
-            </div>
-            <h3 className="font-serif text-2xl font-bold text-forest-900 tracking-tight">Eco-Luxury Lodging</h3>
-            <p className="text-xs text-forest-650 leading-relaxed font-light">
-              Rest inside five-star luxury villas in direct proximity of the National parks. Immersive jungle environments with private massage decks, fireplaces, and chef service.
+        <section className="max-w-7xl mx-auto px-6 space-y-16 relative z-10">
+          <div className="text-center space-y-4">
+            <span className="text-xs font-bold tracking-widest text-sand-300 uppercase bg-forest-950/80 px-3.5 py-1.5 rounded-full border border-forest-800 inline-block font-mono">
+              Unrivaled Quality
+            </span>
+            <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-white">
+              Why Expedition with Hobe Gorilla
+            </h2>
+            <p className="text-xs text-forest-200 max-w-md mx-auto font-light leading-relaxed">
+              Highly personalized luxury hospitality designed synchronously around severe environmental conservation rules.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-3xl border border-forest-100 shadow-luxury space-y-5">
-            <div className="w-12 h-12 bg-forest-50 border border-forest-150 rounded-2xl flex items-center justify-center text-forest-700">
-              <Award className="w-6 h-6" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-forest-950 p-8 rounded-3xl border border-forest-800/50 shadow-luxury space-y-5 hover:border-sand-600/30 transition-all duration-300">
+              <div className="w-12 h-12 bg-forest-900 border border-forest-800 rounded-2xl flex items-center justify-center text-sand-400">
+                <Star className="w-6 h-6 fill-sand-400/20" />
+              </div>
+              <h3 className="font-serif text-2xl font-bold text-white tracking-tight">Eco-Luxury Lodging</h3>
+              <p className="text-xs text-forest-200 leading-relaxed font-light">
+                Rest inside five-star luxury villas in direct proximity of the National parks. Immersive jungle environments with private massage decks, fireplaces, and chef service.
+              </p>
             </div>
-            <h3 className="font-serif text-2xl font-bold text-forest-900 tracking-tight">Hassle-Free Booking</h3>
-            <p className="text-xs text-forest-650 leading-relaxed font-light">
-              Tracking licenses are capped daily inside Rwanda to protect gorillas. We secure your verified legal tracking permits under the official park records within 24 hours.
-            </p>
-          </div>
 
-          <div className="bg-white p-8 rounded-3xl border border-forest-100 shadow-luxury space-y-5">
-            <div className="w-12 h-12 bg-forest-50 border border-forest-150 rounded-2xl flex items-center justify-center text-forest-700">
-              <Heart className="w-6 h-6 text-red-600 fill-red-500/20" />
+            <div className="bg-forest-950 p-8 rounded-3xl border border-forest-800/50 shadow-luxury space-y-5 hover:border-sand-600/30 transition-all duration-300">
+              <div className="w-12 h-12 bg-forest-900 border border-forest-800 rounded-2xl flex items-center justify-center text-sand-400">
+                <Award className="w-6 h-6" />
+              </div>
+              <h3 className="font-serif text-2xl font-bold text-white tracking-tight">Hassle-Free Booking</h3>
+              <p className="text-xs text-forest-200 leading-relaxed font-light">
+                Tracking licenses are capped daily inside Rwanda to protect gorillas. We secure your verified legal tracking permits under the official park records within 24 hours.
+              </p>
             </div>
-            <h3 className="font-serif text-2xl font-bold text-forest-900 tracking-tight">Community Investment</h3>
-            <p className="text-xs text-forest-650 leading-relaxed font-light">
-              Over 10% of revenue goes back directly to local forest rangers, tracking trackers, and building schools in surrounding communities, creating a fully aligned circular economy.
-            </p>
+
+            <div className="bg-forest-950 p-8 rounded-3xl border border-forest-800/50 shadow-luxury space-y-5 hover:border-sand-600/30 transition-all duration-300">
+              <div className="w-12 h-12 bg-forest-900 border border-forest-800 rounded-2xl flex items-center justify-center text-sand-400">
+                <Heart className="w-6 h-6 text-[#e06666] fill-[#e06666]/10" />
+              </div>
+              <h3 className="font-serif text-2xl font-bold text-white tracking-tight">Community Investment</h3>
+              <p className="text-xs text-forest-200 leading-relaxed font-light">
+                Over 10% of revenue goes back directly to local forest rangers, tracking trackers, and building schools in surrounding communities, creating a fully aligned circular economy.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* 5. PARALLAX CALL-TO-ACTION */}
       <section className="bg-gradient-to-br from-emerald-50 to-sand-100/60 text-forest-950 py-20 px-6 relative overflow-hidden border-t border-forest-100/50">
