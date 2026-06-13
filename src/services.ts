@@ -209,40 +209,15 @@ export const authService = {
     const isAdm = email.trim().toLowerCase() === 'hobegorillarwanda@gmail.com';
     const role = isAdm ? 'admin' : 'customer';
 
-    const fallbackLocalSignUp = () => {
-      const users = getLocalStorageData<UserProfile[]>(LOCAL_STORAGE_KEYS.USERS, []);
-      const existingUser = users.find(u => u.email === email);
-      if (existingUser) {
-        throw new Error("User registration failed: email ya registered!");
-      }
-      const newUid = 'sim_uid_' + Math.floor(Math.random() * 1000000);
-      const newProfile: UserProfile = {
-        uid: newUid,
-        email: email,
-        role: role,
-        createdAt: new Date().toISOString()
-      };
-      users.push(newProfile);
-      setLocalStorageData(LOCAL_STORAGE_KEYS.USERS, users);
-
-      const authUser: AuthUser = {
-        uid: newUid,
-        email: email,
-        role: role,
-        emailVerified: true
-      };
-      currentSimulatedUser = authUser;
-      localStorage.setItem(LOCAL_STORAGE_KEYS.SESSION, JSON.stringify(authUser));
-      notifyAuthListeners();
-      return authUser;
-    };
-
     if (isFirebaseActive() && auth && db) {
+      if (pass.length < 6) {
+        throw new Error("Password must be at least 6 characters.");
+      }
       try {
-        const result = await createUserWithEmailAndPassword(auth, email, pass);
+        const result = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), pass);
         const fbUser = result.user;
         
-        // Sync profile
+        // Sync profile to database
         await setDoc(doc(db, 'users', fbUser.uid), {
           email: fbUser.email,
           role: role,
@@ -253,91 +228,121 @@ export const authService = {
           uid: fbUser.uid,
           email: email,
           role: role,
-          emailVerified: true
+          emailVerified: fbUser.emailVerified
         };
       } catch (err: any) {
-        if (err && err.code === 'auth/operation-not-allowed') {
-          console.warn("Firebase Email/Password provider is disabled. Falling back to local simulation.", err);
-          return fallbackLocalSignUp();
-        }
         console.error("Signup error in Firebase:", err);
-        throw err;
+        let message = "Could not register account. Please try again.";
+        if (err.code === 'auth/email-already-in-use') {
+          message = "An account with this email address already is registered.";
+        } else if (err.code === 'auth/weak-password') {
+          message = "The password is too weak. Please use at least 6 characters.";
+        } else if (err.code === 'auth/invalid-email') {
+          message = "Please enter a valid email address.";
+        } else if (err.code) {
+          message = `${err.message} (${err.code})`;
+        }
+        throw new Error(message);
       }
     } else {
-      // Local simulation
+      // Local fallback simulation ONLY when cloud configuration is inactive
+      const fallbackLocalSignUp = () => {
+        const users = getLocalStorageData<UserProfile[]>(LOCAL_STORAGE_KEYS.USERS, []);
+        const existingUser = users.find(u => u.email === email);
+        if (existingUser) {
+          throw new Error("User registration failed: email ya registered!");
+        }
+        const newUid = 'sim_uid_' + Math.floor(Math.random() * 1000000);
+        const newProfile: UserProfile = {
+          uid: newUid,
+          email: email,
+          role: role,
+          createdAt: new Date().toISOString()
+        };
+        users.push(newProfile);
+        setLocalStorageData(LOCAL_STORAGE_KEYS.USERS, users);
+
+        const authUser: AuthUser = {
+          uid: newUid,
+          email: email,
+          role: role,
+          emailVerified: true
+        };
+        currentSimulatedUser = authUser;
+        localStorage.setItem(LOCAL_STORAGE_KEYS.SESSION, JSON.stringify(authUser));
+        notifyAuthListeners();
+        return authUser;
+      };
       return fallbackLocalSignUp();
     }
   },
 
   async signInWithEmail(email: string, pass: string): Promise<AuthUser> {
     const isAdm = email.trim().toLowerCase() === 'hobegorillarwanda@gmail.com';
-    const role = isAdm ? 'admin' : 'customer';
-
-    const fallbackLocalSignIn = () => {
-      if (isAdm && pass !== 'Expert100%') {
-        throw new Error("Invalid admin password. Please use correct password.");
-      }
-      const authUser: AuthUser = {
-        uid: isAdm ? 'admin_sim_uid' : 'customer_sim_uid_' + Math.floor(Math.random() * 100000),
-        email: email,
-        role: role,
-        emailVerified: true
-      };
-      currentSimulatedUser = authUser;
-      localStorage.setItem(LOCAL_STORAGE_KEYS.SESSION, JSON.stringify(authUser));
-      notifyAuthListeners();
-      return authUser;
-    };
+    const role: 'admin' | 'customer' = isAdm ? 'admin' : 'customer';
 
     if (isFirebaseActive() && auth && db) {
       try {
-        let result;
-        try {
-          result = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), pass);
-        } catch (signErr: any) {
-          if (signErr && signErr.code === 'auth/operation-not-allowed') {
-            console.warn("Firebase Email/Password provider is disabled. Falling back to local simulation.", signErr);
-            return fallbackLocalSignIn();
-          }
-          // If the login fails but it is the requested admin with correct password, register them automatically inside Firebase
-          if (isAdm && pass === 'Expert100%' && (signErr.code === 'auth/user-not-found' || signErr.code === 'auth/invalid-credential' || signErr.code === 'auth/wrong-password')) {
-            try {
-              result = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), pass);
-              // Sync profile as admin in firestore
-              await setDoc(doc(db, 'users', result.user.uid), {
-                email: result.user.email,
-                role: 'admin',
-                createdAt: new Date().toISOString()
-              });
-            } catch (createErr: any) {
-              if (createErr && createErr.code === 'auth/operation-not-allowed') {
-                console.warn("Firebase Email/Password sign-up provider is disabled. Falling back to local simulation during auto-registration.", createErr);
-                return fallbackLocalSignIn();
-              }
-              console.error("Auto-registration of admin failed, throwing original sign-in error", createErr);
-              throw signErr;
-            }
-          } else {
-            throw signErr;
-          }
-        }
+        const result = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), pass);
         const fbUser = result.user;
+        
+        // Fetch or verify updated user profile info
+        let currentRole: 'admin' | 'customer' = role;
+        try {
+          const userDoc = await getDoc(doc(db, 'users', fbUser.uid));
+          if (userDoc.exists()) {
+            currentRole = userDoc.data().role === 'admin' ? 'admin' : 'customer';
+          } else {
+            // Write default customer or admin profile directly to firestore
+            await setDoc(doc(db, 'users', fbUser.uid), {
+              email: fbUser.email,
+              role: role,
+              createdAt: new Date().toISOString()
+            });
+          }
+        } catch (e) {
+          console.warn("Could not retrieve profile role, fallback to active role", e);
+        }
+
         return {
           uid: fbUser.uid,
           email: fbUser.email || email,
+          role: currentRole,
+          emailVerified: fbUser.emailVerified
+        };
+      } catch (err: any) {
+        console.error("Sign in error in Firebase:", err);
+        let message = "Log in failed. Please check your credentials.";
+        if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+          message = "Incorrect password or email.";
+        } else if (err.code === 'auth/user-not-found') {
+          message = "No account exists with this email address. Please register first.";
+        } else if (err.code === 'auth/invalid-email') {
+          message = "Please enter a valid email address.";
+        } else if (err.code === 'auth/user-disabled') {
+          message = "This user account has been disabled.";
+        } else if (err.code) {
+          message = `${err.message} (${err.code})`;
+        }
+        throw new Error(message);
+      }
+    } else {
+      // Local fallback simulation ONLY when cloud configuration is inactive
+      const fallbackLocalSignIn = () => {
+        if (isAdm && pass !== 'Expert100%') {
+          throw new Error("Invalid admin password. Please use correct password.");
+        }
+        const authUser: AuthUser = {
+          uid: isAdm ? 'admin_sim_uid' : 'customer_sim_uid_' + Math.floor(Math.random() * 105000),
+          email: email,
           role: role,
           emailVerified: true
         };
-      } catch (err: any) {
-        if (err && err.code === 'auth/operation-not-allowed') {
-          console.warn("Firebase Email/Password provider is disabled. Falling back to local simulation.", err);
-          return fallbackLocalSignIn();
-        }
-        console.error("Sign in error in Firebase:", err);
-        throw err;
-      }
-    } else {
-      // Local simulation
+        currentSimulatedUser = authUser;
+        localStorage.setItem(LOCAL_STORAGE_KEYS.SESSION, JSON.stringify(authUser));
+        notifyAuthListeners();
+        return authUser;
+      };
       return fallbackLocalSignIn();
     }
   },

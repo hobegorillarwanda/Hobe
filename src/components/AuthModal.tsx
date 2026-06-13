@@ -15,10 +15,20 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login' }: AuthModalProps) {
+  const [mode, setMode] = useState<'login' | 'register'>(initialMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+      setError('');
+      setEmail('');
+      setPassword('');
+    }
+  }, [isOpen, initialMode]);
 
   if (!isOpen) return null;
 
@@ -32,7 +42,12 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
     setError('');
 
     try {
-      const user = await authService.signInWithEmail(email, password);
+      let user;
+      if (mode === 'register') {
+        user = await authService.signUpWithEmail(email, password);
+      } else {
+        user = await authService.signInWithEmail(email, password);
+      }
       onSuccess?.(user);
       onClose();
     } catch (err: any) {
@@ -63,7 +78,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
         className="w-full max-w-md bg-sand-50 rounded-2xl border border-forest-100 overflow-hidden shadow-luxury animate-in fade-in zoom-in-95 duration-200"
       >
         {/* Banner */}
-        <div className="relative bg-forest-700 p-6 text-white text-center">
+        <div className="relative bg-forest-700 p-6 text-white text-center font-sans">
           <button 
             id="close-auth-btn"
             onClick={onClose}
@@ -73,10 +88,10 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
           </button>
           
           <h3 className="font-serif text-2xl font-bold tracking-tight text-sand-100 mt-2">
-            Sign In to Account
+            {mode === 'register' ? 'Create Account' : 'Sign In to Account'}
           </h3>
-          <p className="text-xs text-forest-100 mt-1">
-            Access customized itineraries and Gorilla tracking logs
+          <p className="text-xs text-forest-100 mt-1 font-sans">
+            {mode === 'register' ? 'Register today to book and secure custom Gorilla permit bookings' : 'Access customized itineraries and Gorilla tracking logs'}
           </p>
         </div>
 
@@ -88,7 +103,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 font-sans">
             <div>
               <label className="block text-xs font-semibold text-forest-800 uppercase tracking-widest mb-1.5">
                 Email Address
@@ -137,10 +152,28 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
               disabled={loading}
               className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-forest-700 hover:bg-forest-600 disabled:bg-forest-200 text-sand-50 font-medium rounded-xl text-sm shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-forest-700 cursor-pointer"
             >
-              <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
+              <span>{loading ? 'Processing...' : (mode === 'register' ? 'Register Account' : 'Sign In')}</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </form>
+
+          {/* Toggle mode link */}
+          <div className="mt-4 text-center">
+            <button
+              id="auth-toggle-mode-btn"
+              type="button"
+              className="text-xs text-forest-700 hover:text-forest-900 font-semibold underline underline-offset-2 cursor-pointer"
+              onClick={() => {
+                setMode(mode === 'login' ? 'register' : 'login');
+                setError('');
+              }}
+            >
+              {mode === 'login' 
+                ? "Don't have an credentials account? Register here" 
+                : "Already have an account? Sign In here"
+              }
+            </button>
+          </div>
 
           {/* Social Divider */}
           <div className="relative my-6 text-center">
