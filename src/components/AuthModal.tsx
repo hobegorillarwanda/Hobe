@@ -77,8 +77,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
             <X className="w-5 h-5" />
           </button>
           
-          <Sparkles className="w-8 h-8 text-sand-200 mx-auto mb-2 animate-pulse" />
-          <h3 className="font-serif text-2xl font-bold tracking-tight text-sand-100">
+          <h3 className="font-serif text-2xl font-bold tracking-tight text-sand-100 mt-2">
             {mode === 'login' ? 'Welcome Back' : 'Create Safari Account'}
           </h3>
           <p className="text-xs text-forest-100 mt-1">
@@ -210,12 +209,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
             )}
           </div>
 
-          <div className="mt-4 p-3 bg-forest-100/50 rounded-xl border border-forest-200/40 text-center flex items-center justify-center gap-2">
-            <Info className="w-4.5 h-4.5 text-forest-750 shrink-0" />
-            <p className="text-[10px] text-forest-700 font-medium text-left">
-              <strong>Admin Instruction:</strong> Log in using the <strong>"Continue with Google"</strong> button above with your email <strong>hobegorillarwanda@gmail.com</strong> to gain full instant administrator rights.
-            </p>
-          </div>
+
         </div>
       </div>
     </div>

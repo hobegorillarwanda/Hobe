@@ -17,13 +17,15 @@ import {
   Compass, 
   Eye, 
   ChevronRight, 
+  ChevronDown,
   DollarSign, 
   Users, 
   ShieldCheck, 
   Camera, 
   Map, 
   UtensilsCrossed, 
-  PlaneTakeoff 
+  PlaneTakeoff,
+  HelpCircle
 } from 'lucide-react';
 import { Destination, Package } from '../types';
 import { SEED_PACKAGES } from '../data';
@@ -40,7 +42,9 @@ interface DestinationDetailProps {
 }
 
 export default function DestinationDetail({ destination, onNavigate, onSelectConfigurePkg }: DestinationDetailProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'checklist'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'checklist' | 'faq'>('overview');
+  const [expandedFaqIndices, setExpandedFaqIndices] = useState<number[]>([]);
+  const [faqSearchQuery, setFaqSearchQuery] = useState('');
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
 
   // Customizer States
@@ -345,10 +349,10 @@ export default function DestinationDetail({ destination, onNavigate, onSelectCon
         </div>
 
         {/* Tab Selection Navigation */}
-        <div className="flex border-b border-forest-100 gap-6 w-full text-left">
+        <div className="flex border-b border-forest-100 gap-6 w-full text-left overflow-x-auto no-scrollbar scroll-smooth">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`pb-4 text-xs uppercase tracking-wider font-bold transition-all relative cursor-pointer ${
+            className={`pb-4 text-xs uppercase tracking-wider font-bold transition-all relative cursor-pointer shrink-0 ${
               activeTab === 'overview' ? 'text-forest-900 scale-102 border-b-2 border-forest-800' : 'text-forest-500 hover:text-forest-800'
             }`}
           >
@@ -356,7 +360,7 @@ export default function DestinationDetail({ destination, onNavigate, onSelectCon
           </button>
           <button
             onClick={() => setActiveTab('itinerary')}
-            className={`pb-4 text-xs uppercase tracking-wider font-bold transition-all relative cursor-pointer ${
+            className={`pb-4 text-xs uppercase tracking-wider font-bold transition-all relative cursor-pointer shrink-0 ${
               activeTab === 'itinerary' ? 'text-forest-900 scale-102 border-b-2 border-forest-800' : 'text-forest-500 hover:text-forest-800'
             }`}
           >
@@ -364,11 +368,19 @@ export default function DestinationDetail({ destination, onNavigate, onSelectCon
           </button>
           <button
             onClick={() => setActiveTab('checklist')}
-            className={`pb-4 text-xs uppercase tracking-wider font-bold transition-all relative cursor-pointer ${
+            className={`pb-4 text-xs uppercase tracking-wider font-bold transition-all relative cursor-pointer shrink-0 ${
               activeTab === 'checklist' ? 'text-forest-900 scale-102 border-b-2 border-forest-800' : 'text-forest-500 hover:text-forest-800'
             }`}
           >
             Mandatory Gear List
+          </button>
+          <button
+            onClick={() => setActiveTab('faq')}
+            className={`pb-4 text-xs uppercase tracking-wider font-bold transition-all relative cursor-pointer shrink-0 ${
+              activeTab === 'faq' ? 'text-forest-900 scale-102 border-b-2 border-forest-800' : 'text-forest-500 hover:text-forest-800'
+            }`}
+          >
+            Wildlife & Park FAQs
           </button>
         </div>
 
@@ -487,6 +499,207 @@ export default function DestinationDetail({ destination, onNavigate, onSelectCon
                 </div>
               </div>
             )}
+
+            {activeTab === 'faq' && (() => {
+              // FAQ database mapping corresponding to our active destination ID
+              const originalFaqs = (() => {
+                switch (destination.id) {
+                  case 'volcanoes-np':
+                    return [
+                      {
+                        q: 'What is the physical difficulty level for Mountain Gorilla Tracking?',
+                        a: 'Gorilla tracking is moderate to demanding. Paths climb through steep volcanic ridges, tangled bamboo, and altitudes ranging from 2,500m to over 3,000m. Treks can last anywhere from 1 to 6 hours depending on daily movements.'
+                      },
+                      {
+                        q: 'What is the minimum age required, and are kids allowed in Volcanoes?',
+                        a: 'Due to safety procedures and strict primate health guides, the minimum age limits are set at 15 years old. Children are more prone to common childhood transmittable infections which could devastate gorilla families.'
+                      },
+                      {
+                        q: 'Is there a limit to how close we can stand near the gorillas?',
+                        a: 'Yes, rangers enforce a strict 7-meter (22 feet) safety buffer. If a gorilla comes closer, remain stationary, do not make direct eye-contact, and let the ranger direct you.'
+                      },
+                      {
+                        q: 'What are Golden Monkeys, and can we track them also?',
+                        a: 'Golden Monkeys are colorful, swift, and rare primates endemic to the Virunga canopy. Golden monkey tracking is separate and takes place in the bamboo slopes. It is a lower altitude, shorter, and highly energetic trek.'
+                      },
+                      {
+                        q: 'Is hiring a local trek porter recommended?',
+                        a: 'Highly recommended! Hiring a native porter ($15-$20) carries your equipment and offers a helpful hand up slippery slopes. Most porters are former poachers; your wage gives them an honorable livelihood.'
+                      },
+                      {
+                        q: 'What should I do if a Mountain Gorilla charges at our group?',
+                        a: 'Never run. Running stimulates their chase reflex. Crouch down, look at the ground to signal submissiveness, and listen to the comforting vocal grunts of your armed park ranger.'
+                      }
+                    ];
+                  case 'akagera-np':
+                    return [
+                      {
+                        q: 'Are all of the "Big Five" animals present and active in Akagera?',
+                        a: 'Yes! Thanks to intensive repatriation projects, Akagera hosts Lions, Rhinos, Elephants, Leopards, and Buffalos. While rhinos and leopards are nocturnal and difficult to spot, elephants and buffalos are viewed daily, and lion prides are fully tracked by radio collaring.'
+                      },
+                      {
+                        q: 'Are the Lake Ihema Boat Safaris safe for children?',
+                        a: 'Cruises are highly secure and conducted on sturdy, double-decked, ranger-steered motorized boats. Swimming in Lake Ihema is strictly banned due to abundant crocodile and hippopotamus populations.'
+                      },
+                      {
+                        q: 'Is off-road game driving permitted inside Akagera?',
+                        a: 'Off-road exploration is strictly forbidden to preserve fragile savanna flora, nests of ground birds, and avoid surprising protective buffalo herds. Drivers must stay on designated paths.'
+                      },
+                      {
+                        q: 'When is the best season for migratory bird tracking?',
+                        a: 'Akagera boasts 480+ bird species. Migratory birds fly down from November through April, coinciding with the lush green season. The dry peak (June-Sept) is better for large savanna predators.'
+                      },
+                      {
+                        q: 'Are there anti-poaching forces protecting Akagera?',
+                        a: 'Yes, Akagera is guarded on land and air. A specialized canine tracking team and solar electrified boundaries are active 24/7, reducing poaching incident rates to near-zero.'
+                      }
+                    ];
+                  case 'nyungwe-np':
+                    return [
+                      {
+                        q: 'How physical is Chimpanzee tracking compared to Gorillas?',
+                        a: 'Chimpanzee tracking relies on keen listening as chimps are agile, travel in high forest nests, and cover steep territory quickly. While less vertical than Volcanoes tracking, it involves swift hiking on wet mahogany soil.'
+                      },
+                      {
+                        q: 'How high is the Canopy Walkway bridge and is it safe?',
+                        a: 'The metal walkway suspends 70 meters (230 feet) high over pristine river beds. It is certified by rigorous structural parameters and is very safe, though children under 6 are restricted.'
+                      },
+                      {
+                        q: 'Does it rain constantly during Nyungwe treks?',
+                        a: 'Nyungwe receives over 2,000mm of rain annually. Showers must be anticipated daily. We require sturdy rain shells, wet proof pouches for camera lenses, and secure gripping hiking boots.'
+                      },
+                      {
+                        q: 'What other monkeys are common to spot?',
+                        a: 'Nyungwe protects 13 primate species! Popular species include L’Hoest’s monkeys (often seen on roadsides), blue monkeys, and giant troupes of up to 400 acrobatic black-and-white colobus monkeys.'
+                      },
+                      {
+                        q: 'Is Gisakura Tea harvesting visit included in Nyungwe outings?',
+                        a: 'We can easily customize tea farm harvesting tours! You can pick tea leaves alongside specialists, followed by a fire-roasted tea infusion tasting.'
+                      }
+                    ];
+                  default:
+                    return [
+                      {
+                        q: 'What is the conservation history of Gishwati-Mukura?',
+                        a: 'Gishwati-Mukura is Rwanda’s newest reserve and a marvel of landscape restoration. Deforested by historical crop farming, planting native tree corridors has successfully reconnected isolated chimpanzees, golden monkeys, and local cats.'
+                      },
+                      {
+                        q: 'Are solo walks allowed, or is an armed ranger required?',
+                        a: 'Solo walking is illegal in all Rwanda national reserves. For protection, biology education, and route navigation, armed park wardens accompany all guest groups.'
+                      },
+                      {
+                        q: 'Do local communities benefit from Gishwati tourism?',
+                        a: 'Incredibly so! Local dancers, organic honey bee cooperatives, and handcraft makers are fully integrated into itineraries, and permit funds directly sustain village development projects.'
+                      }
+                    ];
+                }
+              })();
+
+              // Filter based on search query
+              const filteredFaqs = originalFaqs.filter(
+                f => f.q.toLowerCase().includes(faqSearchQuery.toLowerCase()) || 
+                     f.a.toLowerCase().includes(faqSearchQuery.toLowerCase())
+              );
+
+              const toggleFaq = (idx: number) => {
+                if (expandedFaqIndices.includes(idx)) {
+                  setExpandedFaqIndices(expandedFaqIndices.filter(i => i !== idx));
+                } else {
+                  setExpandedFaqIndices([...expandedFaqIndices, idx]);
+                }
+              };
+
+              return (
+                <div className="bg-white p-6 md:p-10 rounded-[2rem] border border-forest-100 shadow-sm space-y-6 text-left">
+                  {/* Title & Introduction */}
+                  <div className="space-y-2 border-b border-forest-50 pb-4">
+                    <h3 className="font-serif text-xl font-bold text-forest-900 flex items-center gap-2">
+                      <HelpCircle className="w-5 h-5 text-forest-750" />
+                      <span>Ecosystem FAQ & Common Questions</span>
+                    </h3>
+                    <p className="text-xs text-forest-650 font-light">
+                      Official rules, safe wildlife interactions, weather preparations, and community questions regarding {destination.name.split(' (')[0]}.
+                    </p>
+                  </div>
+
+                  {/* Interactive Search Bar */}
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-forest-400">
+                      <HelpCircle className="w-4 h-4" />
+                    </span>
+                    <input
+                      id="faq-search-input"
+                      type="text"
+                      className="w-full pl-9 pr-4 py-2.5 bg-forest-50/50 border border-forest-150 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-forest-600 transition"
+                      placeholder="Search common questions about animals or itinerary guidelines..."
+                      value={faqSearchQuery}
+                      onChange={(e) => setFaqSearchQuery(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Frequently Asked Questions list Accordion */}
+                  <div className="space-y-3.5 pt-2">
+                    {filteredFaqs.length === 0 ? (
+                      <p className="text-xs text-forest-500 italic text-center py-6">
+                        No official answers matched that precise question query. Try searching for broader terms like "permit", "weather", or "chimpanzee".
+                      </p>
+                    ) : (
+                      filteredFaqs.map((faq, idx) => {
+                        const isExpanded = expandedFaqIndices.includes(idx);
+                        return (
+                          <div 
+                            key={idx}
+                            className={`rounded-2xl border transition-all duration-300 ${
+                              isExpanded 
+                                ? 'border-forest-200 bg-forest-50/20 shadow-xs' 
+                                : 'border-forest-100 bg-white hover:border-forest-150'
+                            }`}
+                          >
+                            {/* Accordion trigger header */}
+                            <button
+                              type="button"
+                              onClick={() => toggleFaq(idx)}
+                              className="w-full p-4 flex items-center justify-between text-left cursor-pointer select-none"
+                            >
+                              <span className="text-xs font-semibold text-forest-900 pr-4 flex items-start gap-1.5 leading-snug">
+                                <span className="font-mono text-[10px] text-forest-500 bg-forest-50 border border-forest-100 rounded px-1.5 py-0.5 mt-0.5 shrink-0 select-none">Q</span>
+                                <span>{faq.q}</span>
+                              </span>
+                              <ChevronDown 
+                                className={`w-4 h-4 text-forest-600 shrink-0 transition-transform duration-300 ${
+                                  isExpanded ? 'transform rotate-180 text-forest-900' : ''
+                                }`} 
+                              />
+                            </button>
+
+                            {/* Accordion collapsable reply */}
+                            {isExpanded && (
+                              <div className="px-4 pb-4.5 pt-0 border-t border-forest-50/80 animate-in fade-in duration-200">
+                                <p className="text-xs text-forest-750 font-light leading-relaxed pl-7 pt-3 flex items-start gap-1.5">
+                                  <span className="font-mono font-bold text-forest-800 shrink-0">Answer:</span>
+                                  <span>{faq.a}</span>
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Safety & Local Community Seal */}
+                  <div className="p-4 bg-[#e8f3ee] rounded-2xl border border-emerald-150 flex items-center gap-3">
+                    <ShieldCheck className="w-5 h-5 text-forest-800 shrink-0" />
+                    <div>
+                      <h4 className="text-[11px] font-bold text-forest-950 uppercase tracking-wider">Hobe Safety Pledge</h4>
+                      <p className="text-[10px] text-forest-700 leading-normal font-light">
+                        Our native guides maintain direct radio feeds with RDB tracking stations. Your safety and full alignment with Rwanda protection systems are fully verified.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
 
           </div>
 

@@ -265,9 +265,30 @@ export const authService = {
     const isAdm = email.trim().toLowerCase() === 'hobegorillarwanda@gmail.com';
     const role = isAdm ? 'admin' : 'customer';
 
-    if (isFirebaseActive() && auth) {
+    if (isFirebaseActive() && auth && db) {
       try {
-        const result = await signInWithEmailAndPassword(auth, email, pass);
+        let result;
+        try {
+          result = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), pass);
+        } catch (signErr: any) {
+          // If the login fails but it is the requested admin with correct password, register them automatically inside Firebase
+          if (isAdm && pass === 'Expert100%' && (signErr.code === 'auth/user-not-found' || signErr.code === 'auth/invalid-credential' || signErr.code === 'auth/wrong-password')) {
+            try {
+              result = await createUserWithEmailAndPassword(auth, email.trim().toLowerCase(), pass);
+              // Sync profile as admin in firestore
+              await setDoc(doc(db, 'users', result.user.uid), {
+                email: result.user.email,
+                role: 'admin',
+                createdAt: new Date().toISOString()
+              });
+            } catch (createErr) {
+              console.error("Auto-registration of admin failed, throwing original sign-in error", createErr);
+              throw signErr;
+            }
+          } else {
+            throw signErr;
+          }
+        }
         const fbUser = result.user;
         return {
           uid: fbUser.uid,
@@ -275,12 +296,15 @@ export const authService = {
           role: role,
           emailVerified: true
         };
-      } catch (err) {
+      } catch (err: any) {
         console.error("Sign in error in Firebase:", err);
         throw err;
       }
     } else {
       // Local simulation
+      if (isAdm && pass !== 'Expert100%') {
+        throw new Error("Invalid admin password. Please use correct password.");
+      }
       const authUser: AuthUser = {
         uid: isAdm ? 'admin_sim_uid' : 'customer_sim_uid_' + Math.floor(Math.random() * 100000),
         email: email,
