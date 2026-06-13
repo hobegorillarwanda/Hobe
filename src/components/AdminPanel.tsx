@@ -56,7 +56,7 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
         </div>
         <div className="bg-sand-100 p-4 rounded-xl text-xs text-forest-850 font-medium flex items-center justify-center gap-2">
           <Lock className="w-4 h-4 text-forest-750 shrink-0" />
-          <span>Sign in with <span className="font-mono bg-white px-2 py-0.5 rounded border border-forest-200">hobegorillarwanda@gmail.com</span> to authorize.</span>
+          <span>Sign in with your verified administrator account to authorize.</span>
         </div>
       </div>
     );
