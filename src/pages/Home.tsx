@@ -231,24 +231,23 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
     <div className="space-y-0">
       
       {/* 1. HERO HEADER */}
-      <header className="relative bg-emerald-100 text-forest-950 min-h-[90vh] flex items-center justify-center px-6 py-24 overflow-hidden">
+      <header className="relative bg-emerald-100 text-forest-950 min-h-[95vh] flex items-center justify-center px-6 py-24 overflow-hidden">
         {/* Real Mountain Gorilla Background Image */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none">
           <img 
             src="/assets/images/mountain_gorilla_1781279668251.jpg" 
             alt="Majestic Mountain Gorilla" 
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover opacity-95 object-center brightness-105 contrast-105"
+            className="w-full h-full object-cover opacity-100 object-center brightness-110 contrast-105"
           />
         </div>
-        {/* Luminous sun-drenched forest overlay - green vibes and bright image visibility */}
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/15 via-emerald-800/10 to-emerald-50/80 z-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-emerald-50/95 via-emerald-100/40 to-transparent z-10"></div>
+        {/* Soft, thin vibrant tint that guarantees the mountain environment looks lush, verdant and bright */}
+        <div className="absolute inset-0 bg-emerald-900/10 z-10"></div>
         {/* Decorative ambient blur elements */}
         <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-emerald-400/20 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-1/4 right-1/10 w-120 h-120 bg-emerald-300/20 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="max-w-4xl mx-auto text-center relative z-20 space-y-8">
+        <div className="max-w-3xl mx-auto text-center relative z-20 space-y-8 bg-emerald-50/90 backdrop-blur-md border border-white/80 p-8 md:p-12 rounded-[2rem] shadow-luxury">
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -266,7 +265,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-serif text-5xl md:text-7xl font-bold tracking-tight text-forest-950 leading-[1.1]"
+            className="font-serif text-4xl md:text-6xl font-bold tracking-tight text-forest-950 leading-[1.1]"
           >
             Witness the Majesty of <br/>
             <span className="text-forest-850 font-serif italic inline-flex items-center min-h-[1.25em]">
@@ -279,7 +278,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.25 }}
-            className="text-sm md:text-base text-forest-800 max-w-2xl mx-auto leading-relaxed font-normal"
+            className="text-xs md:text-sm text-forest-800 max-w-2xl mx-auto leading-relaxed font-normal"
           >
             Embark on a soul-stirring, fully customized safari through Rwanda's mist-shrouded bamboo rainforests and pristine savanna horizons. Led by certified park guides.
           </motion.p>
@@ -288,7 +287,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <button
               onClick={() => onNavigate('destinations')}
@@ -309,23 +308,23 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.6 }}
-            className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto border-t border-forest-200 text-xs font-mono text-forest-750"
+            className="pt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto border-t border-forest-200/50 text-xs font-mono text-forest-750"
           >
             <div className="space-y-1">
-              <span className="block text-xl font-extrabold font-serif text-forest-900">100%</span>
-              <span className="uppercase tracking-wider text-[10px]">Zero-Trace Ecotourism</span>
+              <span className="block text-lg font-extrabold font-serif text-forest-900">100%</span>
+              <span className="uppercase tracking-wider text-[9px]">Zero-Trace Trek</span>
             </div>
             <div className="space-y-1">
-              <span className="block text-xl font-extrabold font-serif text-forest-900">$1,500</span>
-              <span className="uppercase tracking-wider text-[10px]">Permits Contribution</span>
+              <span className="block text-lg font-extrabold font-serif text-forest-900">$1,500</span>
+              <span className="uppercase tracking-wider text-[9px]">Permits Fee</span>
             </div>
             <div className="space-y-1">
-              <span className="block text-xl font-extrabold font-serif text-forest-900">1/3</span>
-              <span className="uppercase tracking-wider text-[10px]">Global Gorilla Share</span>
+              <span className="block text-lg font-extrabold font-serif text-forest-900">1/3</span>
+              <span className="uppercase tracking-wider text-[9px]">Primate Share</span>
             </div>
             <div className="space-y-1">
-              <span className="block text-xl font-extrabold font-serif text-forest-900">24hr</span>
-              <span className="uppercase tracking-wider text-[10px]">Swift Permits Registry</span>
+              <span className="block text-lg font-extrabold font-serif text-forest-900">24hr</span>
+              <span className="uppercase tracking-wider text-[9px]">Fast Docket</span>
             </div>
           </motion.div>
         </div>
