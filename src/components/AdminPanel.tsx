@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { Destination, Package, Booking } from '../types';
 import { AuthUser, destinationService, packageService, bookingService } from '../services';
-import { ShieldCheck, Database, Layers, ClipboardList, PenTool, Plus, Trash2, Edit2, CheckCircle2, XCircle, Clock, Tag, RefreshCw, Lock, MessageSquare, DollarSign, Users, TrendingUp, Award, Search } from 'lucide-react';
+import { ShieldCheck, Database, Layers, ClipboardList, PenTool, Plus, Trash2, Edit2, CheckCircle2, XCircle, Clock, Tag, RefreshCw, Lock, MessageSquare, DollarSign, Users, TrendingUp, Award, Search, Eye, Calendar } from 'lucide-react';
 
 interface AdminPanelProps {
   currentUser: AuthUser | null;
@@ -20,6 +20,7 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
   const [activeTab, setActiveTab] = useState<'bookings' | 'destinations' | 'packages'>('bookings');
   const [isSyncing, setIsSyncing] = useState(false);
   const [bookingSearch, setBookingSearch] = useState('');
+  const [selectedDetailsBooking, setSelectedDetailsBooking] = useState<Booking | null>(null);
 
   // Form states for Destination CRUD
   const [destId, setDestId] = useState('');
@@ -192,6 +193,74 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
     } catch (err: any) {
       alert("Permit status transition declined: " + err.message);
     }
+  };
+
+  const handleUpdateTravelDate = async (id: string, travelDate: string) => {
+    try {
+      await bookingService.updateTravelDate(id, travelDate);
+      refreshData();
+    } catch (err: any) {
+      alert("Failed to assign or reschedule travel date: " + err.message);
+    }
+  };
+
+  const renderSpecialRequests = (text: string) => {
+    if (!text) return null;
+    
+    // Try to parse structured patterns if present
+    const isStructured = text.includes('Tier Type:') || text.includes('Addons:') || text.includes('Setup:');
+    
+    if (isStructured) {
+      let tier = '';
+      const tierMatch = text.match(/(?:Tier Type|Setup|tier):\s*([a-zA-Z\-]+)/i);
+      if (tierMatch) {
+        tier = tierMatch[1].trim();
+      }
+      
+      let addons: string[] = [];
+      const addonsMatch = text.match(/(?:Addons|addons):\s*\[?([^\]\n|]+)\]?/i);
+      if (addonsMatch) {
+        addons = addonsMatch[1].split(',').map(a => a.trim()).filter(Boolean);
+      }
+      
+      let cleanText = text.replace(/\[[^\]]+\]/g, '').trim();
+      // Remove starting or trailing pipe
+      cleanText = cleanText.replace(/^[| ]+|[| ]+$/g, '').trim();
+      
+      return (
+        <div className="mt-2 space-y-1.5 max-w-xs">
+          {tier && (
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider bg-orange-50 border border-orange-200 text-orange-850">
+              Comfort Tier: {tier}
+            </span>
+          )}
+          
+          {addons.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {addons.map((add, index) => (
+                <span key={index} className="inline-block px-1.5 py-0.5 bg-emerald-50 text-emerald-850 border border-emerald-150 rounded text-[9px] font-medium leading-normal">
+                  ✦ {add.replace(/[-_]/g, ' ')}
+                </span>
+              ))}
+            </div>
+          )}
+          
+          {cleanText && cleanText.length > 1 && (
+            <div className="bg-sand-50/50 p-2 rounded-xl border border-sand-200/50 text-[9.5px] text-stone-700 italic font-serif leading-normal mt-1 flex items-start gap-1">
+              <MessageSquare className="w-3 h-3 text-stone-400 shrink-0 mt-0.5" />
+              <span>"{cleanText}"</span>
+            </div>
+          )}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="bg-stone-50/70 p-2 rounded-xl border border-stone-200/50 text-[9.5px] text-stone-650 italic leading-relaxed mt-1.5 max-w-xs flex items-start gap-1.5 shadow-sm">
+        <MessageSquare className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
+        <span className="select-text">"{text}"</span>
+      </div>
+    );
   };
 
   const handleDeleteBooking = async (id: string) => {
@@ -501,15 +570,32 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
                     <p className="font-serif text-sm font-bold text-stone-100">{searchedBooking.fullName}</p>
                     <p className="text-[11px] text-stone-300 font-mono mt-1">{searchedBooking.email}</p>
                     <p className="text-[11px] text-stone-400 font-mono">{searchedBooking.phone}</p>
+                    {searchedBooking.specialRequests && (
+                      <div className="mt-3 bg-white/5 p-2 rounded-xl border border-white/10 text-stone-300">
+                        <span className="text-[8px] font-bold text-stone-400 uppercase tracking-widest block mb-1">Customer Demands:</span>
+                        {renderSpecialRequests(searchedBooking.specialRequests)}
+                      </div>
+                    )}
                   </div>
                   
                   <div className="space-y-1 bg-white/5 p-4 rounded-2xl border border-white/10">
                     <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block">Itinerary Package</span>
                     <p className="font-bold text-stone-100 text-xs line-clamp-1">{searchedBooking.packageName}</p>
-                    <div className="flex items-center gap-1.5 mt-2 bg-emerald-950/40 p-1.5 rounded border border-emerald-900/30 text-stone-300 font-mono text-[10px]">
-                      <span>Date: {searchedBooking.travelDate}</span>
+                    <div className="mt-2.5 bg-emerald-950/50 p-2.5 rounded-xl border border-emerald-900 text-stone-300 font-mono text-[10px] space-y-1.5 shadow-inner">
+                      <span className="text-[8px] font-extrabold text-emerald-400 uppercase tracking-widest block">Reschedule Travel Date</span>
+                      <input 
+                        type="date"
+                        value={searchedBooking.travelDate}
+                        onChange={async (e) => {
+                          const newD = e.target.value;
+                          if (newD) {
+                            await handleUpdateTravelDate(searchedBooking.id, newD);
+                          }
+                        }}
+                        className="bg-emerald-900 border-2 border-emerald-700 hover:border-emerald-500 rounded-lg px-2 py-1 text-white font-mono text-[10.5px] w-full focus:outline-none focus:ring-1 focus:ring-emerald-400 transition cursor-pointer"
+                      />
                     </div>
-                    <span className="text-[10px] text-stone-400 font-mono block mt-1">{searchedBooking.passengerCount} Seat(s) Allocated</span>
+                    <span className="text-[10px] text-stone-400 font-mono block mt-2">{searchedBooking.passengerCount} Seat(s) Allocated</span>
                   </div>
                   
                   <div className="space-y-1 bg-white/5 p-4 rounded-2xl border border-white/10">
@@ -608,9 +694,8 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
                           <p className="text-[10px] text-stone-500 font-mono font-light leading-none">{b.email}</p>
                           <p className="text-[10px] text-stone-400 font-mono font-light leading-none">{b.phone}</p>
                           {b.specialRequests && (
-                            <div className="bg-stone-50 p-2 rounded-lg border border-stone-150 text-[9px] mt-1.5 max-w-xs text-stone-700 flex items-start gap-1.5 shadow-sm">
-                              <MessageSquare className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
-                              <span className="italic leading-normal select-text">"{b.specialRequests}"</span>
+                            <div className="mt-1">
+                              {renderSpecialRequests(b.specialRequests)}
                             </div>
                           )}
                         </td>
@@ -619,9 +704,24 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
                             {b.packageName}
                           </span>
                         </td>
-                        <td className="p-5 space-y-1 text-left">
-                          <p className="font-mono text-[10.5px] font-bold text-forest-900">{b.travelDate}</p>
-                          <p className="text-[10px] text-stone-500">{b.passengerCount} Pax</p>
+                        <td className="p-5 text-left space-y-2">
+                          <p className="font-mono text-[10.5px] font-extrabold text-forest-900 bg-sand-50 border border-sand-250 py-0.5 px-1.5 rounded w-fit">{b.travelDate}</p>
+                          
+                          <div className="space-y-0.5 max-w-[130px]">
+                            <input 
+                              type="date"
+                              value={b.travelDate}
+                              onChange={async (e) => {
+                                const val = e.target.value;
+                                if (val) {
+                                  await handleUpdateTravelDate(b.id, val);
+                                }
+                              }}
+                              className="w-full text-[10px] font-mono px-1.5 py-1 bg-white border border-stone-200 hover:border-forest-400 focus:outline-none focus:ring-1 focus:ring-forest-600 rounded-lg text-stone-700 cursor-pointer transition"
+                            />
+                            <span className="block text-[8px] text-stone-400 font-bold uppercase tracking-wider scale-95 origin-left">Assign Date</span>
+                          </div>
+                          <p className="text-[10px] text-stone-500 font-bold">{b.passengerCount} Pax</p>
                         </td>
                         <td className="p-5 font-bold font-mono text-stone-900 font-medium">
                           {formatCostInUSD(b.totalCost)}
@@ -641,6 +741,14 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
                           </span>
                         </td>
                         <td className="p-5 text-right space-x-1.5 whitespace-nowrap">
+                          <button
+                            onClick={() => setSelectedDetailsBooking(b)}
+                            title="Show dossier card popup"
+                            className="p-1 px-2.5 bg-forest-50 hover:bg-forest-100 border border-forest-150 text-forest-800 rounded-lg text-[10px] font-extrabold cursor-pointer transition inline-flex items-center gap-1 shrink-0"
+                          >
+                            <Eye className="w-3 h-3 text-forest-705" />
+                            <span>View More</span>
+                          </button>
                           <button
                             id={`btn-confirm-${b.id}`}
                             onClick={() => handleToggleStatus(b.id, 'Confirmed')}
@@ -1049,6 +1157,168 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+      {/* Client Detail Popup Modal */}
+      {selectedDetailsBooking && (
+        <div className="fixed inset-0 z-55 flex items-center justify-center p-4 bg-forest-950/80 backdrop-blur-sm animate-in fade-in duration-200 text-left">
+          <div className="w-full max-w-lg bg-white rounded-3xl border border-forest-150 shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200">
+            
+            {/* Header */}
+            <div className="p-6 bg-forest-900 text-white flex justify-between items-center relative border-b border-forest-800">
+              <div className="space-y-1">
+                <span className="text-[9px] font-mono tracking-widest text-[#94743b] font-bold uppercase block leading-none">
+                  Safari Permit Docket
+                </span>
+                <h3 className="font-serif text-lg md:text-xl font-bold text-stone-100 leading-tight">
+                  {selectedDetailsBooking.fullName}
+                </h3>
+                <span className="font-mono text-[9px] text-stone-300 block select-all">
+                  Key: {selectedDetailsBooking.id}
+                </span>
+              </div>
+              <button 
+                onClick={() => setSelectedDetailsBooking(null)}
+                className="p-1 px-2.5 bg-forest-800 hover:bg-forest-700 text-white text-[10px] uppercase font-bold tracking-wider rounded-lg transition"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Content body list */}
+            <div className="p-6 overflow-y-auto space-y-6 text-xs text-stone-750">
+              
+              {/* Primary Contact details */}
+              <div className="space-y-3 bg-stone-50 p-4 rounded-2xl border border-stone-200/60">
+                <h4 className="text-[9.5px] font-bold text-forest-900 uppercase tracking-widest border-b border-stone-200 pb-1.5 flex items-center gap-1.5 font-mono">
+                  <span>Custodian Contact Card</span>
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <span className="text-[9px] font-mono uppercase text-stone-400 block">Email Address</span>
+                    <p className="font-bold text-stone-900 font-mono break-all mt-0.5">{selectedDetailsBooking.email}</p>
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-mono uppercase text-stone-400 block">Phone Connection</span>
+                    <p className="font-bold text-stone-900 font-mono mt-0.5">{selectedDetailsBooking.phone}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Expedition schedule block */}
+              <div className="space-y-3 bg-stone-50 p-4 rounded-2xl border border-stone-200/60">
+                <h4 className="text-[9.5px] font-bold text-forest-900 uppercase tracking-widest border-b border-stone-200 pb-1.5 flex items-center gap-1.5 font-mono">
+                  <span>Itinerary Schedule & Rescheduling</span>
+                </h4>
+                <div className="grid grid-cols-2 gap-4 items-center">
+                  <div>
+                    <span className="text-[9px] font-mono uppercase text-stone-400 block mb-1">Active Tracker Date</span>
+                    <p className="font-mono font-extrabold text-forest-900 bg-sand-150/60 border border-sand-300 py-1 px-2.5 rounded-lg inline-block text-xs">
+                      {selectedDetailsBooking.travelDate}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-mono uppercase text-stone-400 block mb-1">Assign another date</span>
+                    <input 
+                      type="date"
+                      value={selectedDetailsBooking.travelDate}
+                      onChange={async (e) => {
+                        const nextD = e.target.value;
+                        if (nextD) {
+                          await handleUpdateTravelDate(selectedDetailsBooking.id, nextD);
+                          // Keep popup in sync
+                          setSelectedDetailsBooking(prev => prev ? { ...prev, travelDate: nextD } : null);
+                        }
+                      }}
+                      className="w-full px-2.5 py-1.5 bg-white border border-stone-300 rounded-lg text-xs font-mono text-stone-850 focus:outline-none focus:ring-1 focus:ring-emerald-600 transition cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 pt-2.5 border-t border-stone-200">
+                  <div>
+                    <span className="text-[9px] font-mono uppercase text-stone-400 block">Group Headcount</span>
+                    <p className="font-semibold text-stone-900 mt-0.5">{selectedDetailsBooking.passengerCount} Seat(s) Booked</p>
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-mono uppercase text-stone-400 block">Total Financed Amount</span>
+                    <p className="font-bold text-emerald-700 font-mono text-xs mt-0.5">{formatCostInUSD(selectedDetailsBooking.totalCost)}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Custom specs and setup */}
+              <div className="space-y-3 bg-stone-50 p-4 rounded-2xl border border-stone-200/60">
+                <h4 className="text-[9.5px] font-bold text-forest-900 uppercase tracking-widest border-b border-stone-200 pb-1.5 flex items-center gap-1.5 font-mono">
+                  <span>Selected Safari Accommodations</span>
+                </h4>
+                <div>
+                  <span className="text-[9px] font-mono uppercase text-stone-400 block">Expedition Package</span>
+                  <p className="font-bold text-stone-850 text-xs mt-0.5">{selectedDetailsBooking.packageName}</p>
+                </div>
+
+                {selectedDetailsBooking.specialRequests ? (
+                  <div>
+                    <span className="text-[9px] font-mono uppercase text-stone-400 block mb-1">Dossier Special Details / Requests</span>
+                    {renderSpecialRequests(selectedDetailsBooking.specialRequests)}
+                  </div>
+                ) : (
+                  <p className="text-[10px] text-stone-400 italic">No special services, lodging upgrades or dietary demands requested.</p>
+                )}
+              </div>
+
+              {/* Status and coordination actions */}
+              <div className="flex items-center justify-between p-3.5 bg-emerald-50/50 rounded-2xl border border-emerald-100/60 text-[11px] gap-2">
+                <div className="flex items-center gap-1.5 text-stone-600 shrink-0">
+                  <span className="font-medium">Current Status:</span>
+                  <span className={`inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-[9px] font-black uppercase tracking-wider border ${
+                    selectedDetailsBooking.status === 'Confirmed'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                      : selectedDetailsBooking.status === 'Cancelled'
+                      ? 'bg-red-50 text-red-800 border-red-200'
+                      : 'bg-amber-50 text-amber-800 border-amber-200'
+                  }`}>
+                    {selectedDetailsBooking.status || 'Pending'}
+                  </span>
+                </div>
+
+                <div className="flex gap-2 whitespace-nowrap">
+                  <button
+                    onClick={() => {
+                      handleToggleStatus(selectedDetailsBooking.id, 'Confirmed');
+                      setSelectedDetailsBooking(prev => prev ? { ...prev, status: 'Confirmed' } : null);
+                    }}
+                    disabled={selectedDetailsBooking.status === 'Confirmed'}
+                    className="p-1 px-2.5 bg-emerald-600 hover:bg-emerald-505 disabled:opacity-30 text-white rounded-lg text-[10px] font-bold cursor-pointer transition"
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleToggleStatus(selectedDetailsBooking.id, 'Cancelled');
+                      setSelectedDetailsBooking(prev => prev ? { ...prev, status: 'Cancelled' } : null);
+                    }}
+                    disabled={selectedDetailsBooking.status === 'Cancelled'}
+                    className="p-1 px-2.5 bg-red-650 hover:bg-red-600 disabled:opacity-30 text-white rounded-lg text-[10px] font-bold cursor-pointer transition"
+                  >
+                    Void
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Footer controls */}
+            <div className="p-4 border-t border-stone-250 bg-stone-100 flex justify-end">
+              <button 
+                onClick={() => setSelectedDetailsBooking(null)}
+                className="py-2 px-5 bg-stone-900 hover:bg-stone-850 text-white text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer"
+              >
+                Close Dossier
+              </button>
+            </div>
+
           </div>
         </div>
       )}

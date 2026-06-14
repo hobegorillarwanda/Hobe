@@ -26,6 +26,8 @@ const Conservation = lazy(() => import('./pages/Conservation'));
 const BookingsHub = lazy(() => import('./pages/BookingsHub'));
 const BookingPage = lazy(() => import('./pages/BookingPage'));
 const AdminPanel = lazy(() => import('./components/AdminPanel'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Terms = lazy(() => import('./pages/Terms'));
 
 import { Compass, Leaf, MapPin, Phone, Mail, AlertCircle, FolderLock } from 'lucide-react';
 import Logo from './components/Logo';
@@ -38,7 +40,7 @@ export default function App() {
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
   
   // Custom multi-page routing state
-  const [currentRoute, setCurrentRoute] = useState<'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin'>('home');
+  const [currentRoute, setCurrentRoute] = useState<'home' | 'destinations' | 'packages' | 'booking' | 'bookings-hub' | 'conservation' | 'admin' | 'privacy' | 'terms'>('home');
   const [selectedDestinationId, setSelectedDestinationId] = useState<string | null>(null);
 
   // Synchronize route state with URL path for perfect bookmarking, sharing & back-button support without #
@@ -50,7 +52,7 @@ export default function App() {
       const mainRoute = parts[0] || 'home';
       const subRoute = parts[1] || null;
 
-      const validRoutes = ['home', 'destinations', 'packages', 'booking', 'bookings-hub', 'conservation', 'admin'];
+      const validRoutes = ['home', 'destinations', 'packages', 'booking', 'bookings-hub', 'conservation', 'admin', 'privacy', 'terms'];
       if (validRoutes.includes(mainRoute)) {
         setCurrentRoute(mainRoute as any);
         if (mainRoute === 'destinations') {
@@ -288,6 +290,14 @@ export default function App() {
                   refreshData={fetchAllData}
                 />
               )}
+
+              {currentRoute === 'privacy' && (
+                <Privacy onNavigate={handleNavigateWithScroll} />
+              )}
+
+              {currentRoute === 'terms' && (
+                <Terms onNavigate={handleNavigateWithScroll} />
+              )}
             </Suspense>
           </div>
         )}
@@ -385,6 +395,21 @@ export default function App() {
             <p>
               &copy; {new Date().getFullYear()} Hobe Gorilla Rwanda. All rights reserved. Created in Kigali.
             </p>
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={() => handleNavigateWithScroll('privacy')} 
+                className="hover:text-sand-100 transition cursor-pointer"
+              >
+                Privacy Policy
+              </button>
+              <span className="text-forest-800">|</span>
+              <button 
+                onClick={() => handleNavigateWithScroll('terms')} 
+                className="hover:text-sand-100 transition cursor-pointer"
+              >
+                Terms & Conditions
+              </button>
+            </div>
           </div>
 
         </div>
