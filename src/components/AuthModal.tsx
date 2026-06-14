@@ -143,7 +143,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
                 : 'text-forest-700 hover:bg-forest-50 hover:text-forest-900 cursor-pointer'
             }`}
           >
-            🏔️ Customer Sign-In
+            Customer Sign-In
           </button>
           <button
             id="auth-admin-tab-btn"
@@ -159,7 +159,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'l
                 : 'text-forest-700 hover:bg-forest-50 hover:text-forest-900 cursor-pointer'
             }`}
           >
-            🔑 Admin Control
+            Admin Control
           </button>
         </div>
 

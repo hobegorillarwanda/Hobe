@@ -385,25 +385,6 @@ export default function App() {
             <p>
               &copy; {new Date().getFullYear()} Hobe Gorilla Rwanda. All rights reserved. Created in Kigali.
             </p>
-            <button
-              onClick={() => {
-                if (currentUser && currentUser.role === 'admin') {
-                  handleNavigateWithScroll('admin');
-                } else {
-                  setAuthModalMode('login');
-                  setAuthModalRole('admin');
-                  setAuthModalOpen(true);
-                }
-              }}
-              className="flex items-center gap-1.5 bg-forest-900/45 hover:bg-forest-900/75 py-1.5 px-3.5 rounded-full border border-forest-850 text-forest-200 transition cursor-pointer font-mono"
-            >
-              <FolderLock className="w-3.5 h-3.5 text-sand-500 shrink-0" />
-              <span>
-                {currentUser && currentUser.role === 'admin' 
-                  ? `Admin Workspace (${currentUser.email})` 
-                  : 'System Coordinator Login'}
-              </span>
-            </button>
           </div>
 
         </div>

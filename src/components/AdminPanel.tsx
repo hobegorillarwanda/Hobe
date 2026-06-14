@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { Destination, Package, Booking } from '../types';
 import { AuthUser, destinationService, packageService, bookingService } from '../services';
-import { ShieldCheck, Database, Layers, ClipboardList, PenTool, Plus, Trash2, Edit2, CheckCircle2, XCircle, Clock, Tag, RefreshCw, Lock, MessageSquare, DollarSign, Users, TrendingUp, Award } from 'lucide-react';
+import { ShieldCheck, Database, Layers, ClipboardList, PenTool, Plus, Trash2, Edit2, CheckCircle2, XCircle, Clock, Tag, RefreshCw, Lock, MessageSquare, DollarSign, Users, TrendingUp, Award, Search } from 'lucide-react';
 
 interface AdminPanelProps {
   currentUser: AuthUser | null;
@@ -19,6 +19,7 @@ interface AdminPanelProps {
 export default function AdminPanel({ currentUser, destinations, packages, bookings, refreshData }: AdminPanelProps) {
   const [activeTab, setActiveTab] = useState<'bookings' | 'destinations' | 'packages'>('bookings');
   const [isSyncing, setIsSyncing] = useState(false);
+  const [bookingSearch, setBookingSearch] = useState('');
 
   // Form states for Destination CRUD
   const [destId, setDestId] = useState('');
@@ -379,110 +380,301 @@ export default function AdminPanel({ currentUser, destinations, packages, bookin
       </div>
 
       {/* Tab Contents: CLIENT BOOKINGS */}
-      {activeTab === 'bookings' && (
-        <div id="tab-bookings-content" className="bg-white rounded-2xl border border-forest-100 shadow-sm overflow-hidden animate-in fade-in duration-200">
-          <div className="p-6 border-b border-forest-100">
-            <h3 className="font-serif text-xl font-bold text-forest-900">Gorilla Permits & Booking Terminal</h3>
-            <p className="text-xs text-forest-600 mt-1">Real-time coordinator monitoring screen for all inbound customer rosters</p>
-          </div>
+      {activeTab === 'bookings' && (() => {
+        const filteredBookings = bookings.filter(b => {
+          const query = bookingSearch.trim().toLowerCase();
+          if (!query) return true;
+          return (
+            b.id.toLowerCase().includes(query) ||
+            b.fullName.toLowerCase().includes(query) ||
+            b.email.toLowerCase().includes(query) ||
+            (b.packageName && b.packageName.toLowerCase().includes(query))
+          );
+        });
 
-          <div className="overflow-x-auto w-full">
-            {bookings.length === 0 ? (
-              <div className="py-16 text-center text-xs text-forest-600 font-light">
-                No active safari transaction records reported in the database storage.
+        const searchedBooking = bookingSearch.trim()
+          ? (bookings.find(b => 
+              b.id.toLowerCase() === bookingSearch.trim().toLowerCase() ||
+              b.id.replace('HGR-', '').toLowerCase() === bookingSearch.trim().toLowerCase() ||
+              b.id.split('_')[1]?.toLowerCase() === bookingSearch.trim().toLowerCase()
+            ) || bookings.find(b => 
+              b.id.toLowerCase().includes(bookingSearch.trim().toLowerCase())
+            ) || null)
+          : null;
+
+         return (
+          <div id="tab-bookings-content" className="bg-white rounded-3xl border border-forest-100 shadow-lg shadow-forest-900/5 overflow-hidden animate-in fade-in duration-300">
+            {/* Header with quick search */}
+            <div className="p-6 md:p-8 border-b border-forest-100 bg-sand-50/30 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="space-y-1.5">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">
+                  Ranger Database
+                </span>
+                <h3 className="font-serif text-2xl font-bold text-forest-950">Gorilla Permits & Safari Roster</h3>
+                <p className="text-xs text-stone-500 leading-normal font-light">
+                  Active monitoring database. Verify guest tracker certificates and update permit statuses instantly.
+                </p>
               </div>
-            ) : (
-              <table className="w-full text-left border-collapse text-xs">
-                <thead>
-                  <tr className="bg-forest-50 p-4 border-b border-forest-100 text-[10px] font-bold text-forest-800 uppercase tracking-wider">
-                    <th className="p-4">ID</th>
-                    <th className="p-4">Customer Details</th>
-                    <th className="p-4">Package Select</th>
-                    <th className="p-4">Date & Pax</th>
-                    <th className="p-4">Cost</th>
-                    <th className="p-4 text-center">Permit State</th>
-                    <th className="p-4 text-right">Coordination Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-forest-100/50">
-                  {bookings.map(b => (
-                    <tr 
-                      id={`booking-terminal-row-${b.id}`}
-                      key={b.id} 
-                      className="hover:bg-sand-50/40 transition"
+              
+              {/* Added high-visibility booking search / tracking bar */}
+              <div className="w-full lg:max-w-md shrink-0">
+                <label htmlFor="admin-booking-search-input" className="block text-[10px] font-bold text-forest-900 uppercase tracking-wider mb-2">
+                  Track & Verify Active Permit Key
+                </label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-forest-600">
+                    <Search className="w-4.5 h-4.5" />
+                  </span>
+                  <input
+                    id="admin-booking-search-input"
+                    type="text"
+                    value={bookingSearch}
+                    onChange={(e) => setBookingSearch(e.target.value)}
+                    placeholder="Enter Tracking ID (e.g. HGR-...), Name, or Email"
+                    className="w-full pl-10 pr-20 py-2.5 bg-white hover:border-forest-400 focus:bg-white border-2 border-forest-200/80 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-forest-700 focus:border-transparent transition-all placeholder:text-stone-400 shadow-inner font-mono font-medium tracking-wide"
+                  />
+                  {bookingSearch ? (
+                    <button
+                      onClick={() => setBookingSearch('')}
+                      className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-stone-400 hover:text-forest-800 text-[10px] uppercase font-bold tracking-wider cursor-pointer transition"
                     >
-                      <td className="p-4 font-mono font-bold text-forest-800 text-[10px]">
-                        {b.id.substring(0, 14)}...
-                      </td>
-                      <td className="p-4 space-y-1">
-                        <p className="font-bold text-forest-950">{b.fullName}</p>
-                        <p className="text-[10px] text-forest-650">{b.email} | {b.phone}</p>
-                        {b.specialRequests && (
-                          <div className="bg-sand-100 p-2 rounded-lg border border-forest-100 text-[9px] mt-1 max-w-xs text-forest-800 flex items-start gap-1.5">
-                            <MessageSquare className="w-3 h-3 text-sand-700 shrink-0 mt-0.5" />
-                            <span className="italic">"{b.specialRequests}"</span>
-                          </div>
-                        )}
-                      </td>
-                      <td className="p-4">
-                        <span className="font-semibold bg-forest-100 text-forest-900 py-0.5 px-2 rounded border border-forest-200 uppercase text-[10px]">
-                          {b.packageName}
-                        </span>
-                      </td>
-                      <td className="p-4 space-y-1">
-                        <p className="font-mono text-[10px] font-bold text-forest-900">{b.travelDate}</p>
-                        <p className="text-[10px] text-forest-600">{b.passengerCount} passsenger(s)</p>
-                      </td>
-                      <td className="p-4 font-bold font-mono text-forest-950">
-                        {formatCostInUSD(b.totalCost)}
-                      </td>
-                      <td className="p-4 text-center">
-                        <span className={`inline-block py-1 px-3 rounded-full text-[10px] font-extrabold uppercase ${
-                          b.status === 'Confirmed'
-                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                            : b.status === 'Cancelled'
-                            ? 'bg-red-100 text-red-800 border border-red-200'
-                            : 'bg-amber-100 text-amber-800 border border-amber-200'
-                        }`}>
-                          {b.status}
-                        </span>
-                      </td>
-                      <td className="p-4 text-right space-x-1 whitespace-nowrap">
-                        <button
-                          id={`btn-confirm-${b.id}`}
-                          onClick={() => handleToggleStatus(b.id, 'Confirmed')}
-                          disabled={b.status === 'Confirmed'}
-                          title="Confirm Reservation"
-                          className="p-1 px-2.5 bg-emerald-50 hover:bg-emerald-100 hover:border-emerald-200 border border-emerald-100 text-emerald-700 rounded text-[10px] font-bold cursor-pointer transition disabled:opacity-40"
-                        >
-                          Confirm
-                        </button>
-                        <button
-                          id={`btn-cancel-${b.id}`}
-                          onClick={() => handleToggleStatus(b.id, 'Cancelled')}
-                          disabled={b.status === 'Cancelled'}
-                          title="Void Reservation"
-                          className="p-1 px-2.5 bg-red-50 hover:bg-red-100 hover:border-red-200 border border-red-100 text-red-600 rounded text-[10px] font-bold cursor-pointer transition disabled:opacity-40"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          id={`btn-delete-bk-${b.id}`}
-                          onClick={() => handleDeleteBooking(b.id)}
-                          title="Permanent delete row"
-                          className="p-1.5 bg-white border border-gray-200 hover:border-gray-300 text-gray-500 hover:text-red-650 rounded cursor-pointer transition"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </td>
+                      Clear
+                    </button>
+                  ) : (
+                    <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-stone-300 pointer-events-none text-[9px] font-mono select-none">
+                      Search key
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Verification Spotlight Section */}
+            {searchedBooking ? (
+              <div className="m-6 md:m-8 p-6 bg-gradient-to-br from-emerald-950 via-forest-950 to-stone-950 text-white border border-forest-800 rounded-3xl space-y-6 shadow-xl relative overflow-hidden animate-in slide-in-from-top-3 duration-300">
+                {/* Background decorative forest details */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-forest-800/80 pb-4 relative z-10">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-emerald-500/15 rounded-xl border border-emerald-500/30 text-emerald-400 shrink-0">
+                      <ShieldCheck className="w-5 h-5 animate-pulse" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold uppercase font-mono tracking-widest text-emerald-400">
+                        Permit Verification Terminal Output
+                      </h4>
+                      <p className="text-[10px] text-stone-400 font-light mt-0.5">
+                        Authentic digital record parsed and certified from active cloud storage
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <span className={`inline-flex items-center gap-1.5 py-1 px-3.5 rounded-full text-[10px] font-extrabold uppercase font-mono tracking-widest shadow-sm border ${
+                    searchedBooking.status === 'Confirmed'
+                      ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
+                      : searchedBooking.status === 'Cancelled'
+                      ? 'bg-red-500/10 text-red-300 border-red-500/30'
+                      : 'bg-amber-500/10 text-amber-300 border-amber-500/30 font-bold animate-pulse'
+                  }`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${
+                      searchedBooking.status === 'Confirmed'
+                        ? 'bg-emerald-400'
+                        : searchedBooking.status === 'Cancelled'
+                        ? 'bg-red-400'
+                        : 'bg-amber-400'
+                    }`}></span>
+                    {searchedBooking.status}
+                  </span>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10 text-xs text-left">
+                  <div className="space-y-1.5 bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block">Permit Serial Track ID</span>
+                    <p className="font-mono text-emerald-400 font-bold bg-black/40 px-2.5 py-1.5 rounded-lg border border-forest-800 break-all select-all text-[11px] tracking-wide shadow-inner">
+                      {searchedBooking.id}
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-1 bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block">Primary Tracker Guest</span>
+                    <p className="font-serif text-sm font-bold text-stone-100">{searchedBooking.fullName}</p>
+                    <p className="text-[11px] text-stone-300 font-mono mt-1">{searchedBooking.email}</p>
+                    <p className="text-[11px] text-stone-400 font-mono">{searchedBooking.phone}</p>
+                  </div>
+                  
+                  <div className="space-y-1 bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block">Itinerary Package</span>
+                    <p className="font-bold text-stone-100 text-xs line-clamp-1">{searchedBooking.packageName}</p>
+                    <div className="flex items-center gap-1.5 mt-2 bg-emerald-950/40 p-1.5 rounded border border-emerald-900/30 text-stone-300 font-mono text-[10px]">
+                      <span>Date: {searchedBooking.travelDate}</span>
+                    </div>
+                    <span className="text-[10px] text-stone-400 font-mono block mt-1">{searchedBooking.passengerCount} Seat(s) Allocated</span>
+                  </div>
+                  
+                  <div className="space-y-1 bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <span className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block">Financial Transaction</span>
+                    <p className="text-lg font-bold text-emerald-400 font-mono tracking-tight">
+                      {formatCostInUSD(searchedBooking.totalCost)}
+                    </p>
+                    <p className="text-[9.5px] text-stone-400 leading-normal font-light">
+                      Environmental fees, trekking permissions and park taxes calculated in USD.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-forest-800/50 flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10 text-xs">
+                  <div className="flex items-center gap-2 text-stone-300">
+                    <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+                    <span className="text-[10.5px] font-light">
+                      Verified tracker passport matches this database record. Update status as required:
+                    </span>
+                  </div>
+                  <div className="flex gap-2.5 w-full sm:w-auto">
+                    <button
+                      onClick={() => handleToggleStatus(searchedBooking.id, 'Confirmed')}
+                      disabled={searchedBooking.status === 'Confirmed'}
+                      className="flex-1 sm:flex-initial px-4 py-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 disabled:opacity-30 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider transition-all cursor-pointer border border-emerald-500 shadow-md shadow-emerald-955/20"
+                    >
+                      Approve & Issue Certificate
+                    </button>
+                    <button
+                      onClick={() => handleToggleStatus(searchedBooking.id, 'Cancelled')}
+                      disabled={searchedBooking.status === 'Cancelled'}
+                      className="flex-1 sm:flex-initial px-4 py-2 bg-red-650 hover:bg-red-550 active:bg-red-750 disabled:opacity-30 text-white font-bold rounded-xl text-[10px] uppercase tracking-wider transition-all cursor-pointer border border-red-500 shadow-md shadow-red-955/20"
+                    >
+                      Void / Cancel Permit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : bookingSearch.trim() ? (
+              <div className="mx-6 md:mx-8 p-5 bg-stone-50 border border-stone-200 rounded-2xl text-center space-y-2 animate-in slide-in-from-top-2">
+                <span className="inline-block p-1 px-2.5 bg-amber-100 text-amber-800 rounded text-[9px] font-mono uppercase font-bold tracking-wider">
+                  Verification Audit Status
+                </span>
+                <p className="text-xs text-stone-600 font-medium">
+                  No explicit matching permit found for "<span className="font-mono text-stone-900 font-bold">{bookingSearch}</span>" in active spotlight finder.
+                </p>
+                <p className="text-[10.5px] text-stone-550">
+                  Try entering the full, precise tracking serial key from the permit voucher directly.
+                </p>
+              </div>
+            ) : null}
+
+            <div className="overflow-x-auto w-full">
+              {filteredBookings.length === 0 ? (
+                <div className="py-20 text-center text-xs text-stone-500 font-light space-y-3">
+                  <p className="text-sm font-semibold text-stone-600">No client itineraries registered</p>
+                  <p className="text-xs max-w-sm mx-auto text-stone-400">
+                    No active safaris match your search filter constraints. Use the navigation sidebar or clear the search criteria above.
+                  </p>
+                  {bookingSearch && (
+                    <button
+                      onClick={() => setBookingSearch('')}
+                      className="text-forest-750 hover:text-forest-950 font-bold underline text-xs block mx-auto cursor-pointer"
+                    >
+                      Clear Search Parameters
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-stone-50 border-b border-forest-100 text-[10px] font-bold text-stone-500 uppercase tracking-widest">
+                      <th className="p-5 font-mono">ID / KEY</th>
+                      <th className="p-5">CUSTODIAN INFO</th>
+                      <th className="p-5">TRAVEL ITINERARY</th>
+                      <th className="p-5">TIMING & PEOPLE</th>
+                      <th className="p-5">FEE OUTCOME</th>
+                      <th className="p-5 text-center">TICKET STATUS</th>
+                      <th className="p-5 text-right">OPERATIONS CONTROL</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    {filteredBookings.map(b => (
+                      <tr 
+                        id={`booking-terminal-row-${b.id}`}
+                        key={b.id} 
+                        className="hover:bg-sand-50/20 transition-all duration-150"
+                      >
+                        <td className="p-5 font-mono font-bold text-forest-700 text-[10px] select-all cursor-pointer" title="Double click to select/copy full serial ID">
+                          <span className="bg-sand-100/60 p-1 px-1.5 rounded border border-sand-200/50 block w-fit">
+                            {b.id.substring(0, 14)}...
+                          </span>
+                        </td>
+                        <td className="p-5 space-y-1 text-left">
+                          <p className="font-bold text-forest-950 font-sans text-xs">{b.fullName}</p>
+                          <p className="text-[10px] text-stone-500 font-mono font-light leading-none">{b.email}</p>
+                          <p className="text-[10px] text-stone-400 font-mono font-light leading-none">{b.phone}</p>
+                          {b.specialRequests && (
+                            <div className="bg-stone-50 p-2 rounded-lg border border-stone-150 text-[9px] mt-1.5 max-w-xs text-stone-700 flex items-start gap-1.5 shadow-sm">
+                              <MessageSquare className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
+                              <span className="italic leading-normal select-text">"{b.specialRequests}"</span>
+                            </div>
+                          )}
+                        </td>
+                        <td className="p-5 text-left">
+                          <span className="font-extrabold bg-stone-100 text-stone-850 py-0.5 px-2 rounded-md border border-stone-200 uppercase text-[9.5px] tracking-wide inline-block">
+                            {b.packageName}
+                          </span>
+                        </td>
+                        <td className="p-5 space-y-1 text-left">
+                          <p className="font-mono text-[10.5px] font-bold text-forest-900">{b.travelDate}</p>
+                          <p className="text-[10px] text-stone-500">{b.passengerCount} Pax</p>
+                        </td>
+                        <td className="p-5 font-bold font-mono text-stone-900 font-medium">
+                          {formatCostInUSD(b.totalCost)}
+                        </td>
+                        <td className="p-5 text-center">
+                          <span className={`inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-[9px] font-black uppercase tracking-wider border ${
+                            b.status === 'Confirmed'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              : b.status === 'Cancelled'
+                              ? 'bg-red-50 text-red-800 border-red-200'
+                              : 'bg-amber-50 text-amber-800 border-amber-200 animate-pulse'
+                          }`}>
+                            <span className={`w-1 h-1 rounded-full ${
+                              b.status === 'Confirmed' ? 'bg-emerald-500' : b.status === 'Cancelled' ? 'bg-red-500' : 'bg-amber-500'
+                            }`}></span>
+                            {b.status || 'Pending'}
+                          </span>
+                        </td>
+                        <td className="p-5 text-right space-x-1.5 whitespace-nowrap">
+                          <button
+                            id={`btn-confirm-${b.id}`}
+                            onClick={() => handleToggleStatus(b.id, 'Confirmed')}
+                            disabled={b.status === 'Confirmed'}
+                            className="p-1 px-2.5 bg-emerald-600 hover:bg-emerald-505 hover:shadow text-white rounded-lg text-[10px] font-bold cursor-pointer transition disabled:opacity-30 shrink-0"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            id={`btn-cancel-${b.id}`}
+                            onClick={() => handleToggleStatus(b.id, 'Cancelled')}
+                            disabled={b.status === 'Cancelled'}
+                            className="p-1 px-2.5 bg-red-650 hover:bg-red-600 hover:shadow text-white rounded-lg text-[10px] font-bold cursor-pointer transition disabled:opacity-30 shrink-0"
+                          >
+                            Void
+                          </button>
+                          <button
+                            id={`btn-delete-bk-${b.id}`}
+                            onClick={() => handleDeleteBooking(b.id)}
+                            title="Permanent wipe"
+                            className="p-1.5 bg-white border border-stone-200 hover:border-red-200 text-stone-400 hover:text-red-750 rounded-lg cursor-pointer transition shrink-0"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Tab Contents: TRAVEL LOCATIONS CRUD */}
       {activeTab === 'destinations' && (
