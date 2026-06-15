@@ -32,12 +32,12 @@ export const SEED_DESTINATIONS: Destination[] = [
       'Forest Elephants',
       'Rare Bird Species'
     ],
-    imageUrl: '/assets/images/mountain_gorilla.jpg',
+    imageUrl: '/images/mountain_gorilla.jpg',
     longDescription: 'Volcanoes National Park spans five of the eight inactive volcanoes of the magnificent Virunga Mountains, clothed in dense bamboo forests and mist. Visited by thousands seeking a deep spiritual connection with our closest evolutionary cousins, it is one of the only places on Earth where you can safely stand feet away from the gentle, endangered mountain gorilla in their natural sanctuary.',
     gallery: [
-      '/assets/images/mountain_gorilla.jpg',
-      '/assets/images/golden_monkey.jpg',
-      '/assets/images/luxury_lodge.jpg'
+      '/images/mountain_gorilla.jpg',
+      '/images/golden_monkey.jpg',
+      '/images/luxury_lodge.jpg'
     ]
   },
   {
@@ -61,12 +61,12 @@ export const SEED_DESTINATIONS: Destination[] = [
       'Zebras',
       'Hippos'
     ],
-    imageUrl: '/assets/images/akagera_safari.jpg',
+    imageUrl: '/images/akagera_safari.jpg',
     longDescription: 'Spanning eastern Rwanda, Akagera National Park stands as a beautiful testament to successful environmental rehabilitation. Characterized by scenic low hills and flat savanna grasslands interlaced with a labyrinth of swampy lakes, Akagera now supports thriving populations of all the "Big Five" (lions, leopards, rhinos, elephants, buffaloes)—which can be encountered during morning game drives or evening boat safaris along Lake Ihema.',
     gallery: [
-      '/assets/images/akagera_safari.jpg',
-      '/assets/images/lake_kivu_sunset.jpg',
-      '/assets/images/luxury_lodge.jpg'
+      '/images/akagera_safari.jpg',
+      '/images/lake_kivu_sunset.jpg',
+      '/images/luxury_lodge.jpg'
     ]
   },
   {
@@ -86,12 +86,12 @@ export const SEED_DESTINATIONS: Destination[] = [
       'Black and White Colobus Monkeys',
       'Over 300 Bird Species'
     ],
-    imageUrl: '/assets/images/nyungwe_forest.jpg',
+    imageUrl: '/images/nyungwe_forest.jpg',
     longDescription: 'As one of Africa’s oldest montane rainforests, Nyungwe National Park is a spectacular cradle of biodiversity, supporting over 1,000 biological species of plants, 13 diverse primates (including giant troops of colobus and wild chimpanzees), and more than 300 bird species. Its crown jewel is the steel canopy walkway suspension bridge, letting you walk 70 meters high above ancient tree crowns.',
     gallery: [
-      '/assets/images/nyungwe_forest.jpg',
-      '/assets/images/chimpanzee_nyungwe.jpg',
-      '/assets/images/twin_lakes_rwanda.jpg'
+      '/images/nyungwe_forest.jpg',
+      '/images/chimpanzee_nyungwe.jpg',
+      '/images/twin_lakes_rwanda.jpg'
     ]
   },
   {
@@ -110,12 +110,12 @@ export const SEED_DESTINATIONS: Destination[] = [
       'Blue Monkeys',
       'East African Golden Cats'
     ],
-    imageUrl: '/assets/images/golden_monkey.jpg',
+    imageUrl: '/images/golden_monkey.jpg',
     longDescription: 'Gishwati-Mukura represents Rwanda’s newest national reserve and is an inspirational success story in ecological forest restoration. Once almost entirely deforested, it is now protected and replanted to unite isolated primate populations. Visitors can engage in highly exclusive guided forest trails, chimpanzee watches, and intimate local cultural events that directly fund native conservationists.',
     gallery: [
-      '/assets/images/golden_monkey.jpg',
-      '/assets/images/nyungwe_forest.jpg',
-      '/assets/images/mountain_gorilla.jpg'
+      '/images/golden_monkey.jpg',
+      '/images/nyungwe_forest.jpg',
+      '/images/mountain_gorilla.jpg'
     ]
   }
 ];
@@ -135,7 +135,7 @@ export const SEED_PACKAGES: Package[] = [
       'Lunch and Bottled Water',
       'Experienced Park Ranger Guide'
     ],
-    imageUrl: '/assets/images/mountain_gorilla.jpg'
+    imageUrl: '/images/mountain_gorilla.jpg'
   },
   {
     id: 'pkg-mid-range-adventurer',
@@ -152,7 +152,7 @@ export const SEED_PACKAGES: Package[] = [
       'Cultural Village Experience Tour',
       'Local Expert Guide'
     ],
-    imageUrl: '/assets/images/akagera_safari.jpg'
+    imageUrl: '/images/akagera_safari.jpg'
   },
   {
     id: 'pkg-luxury-safari',
@@ -169,7 +169,7 @@ export const SEED_PACKAGES: Package[] = [
       'Dedicated Private Tour Guide',
       'Spa Access & Wellness Amenities'
     ],
-    imageUrl: '/assets/images/luxury_lodge.jpg'
+    imageUrl: '/images/luxury_lodge.jpg'
   }
 ];
 

@@ -358,6 +358,29 @@ export const authService = {
   }
 };
 
+const fixImageUrl = (url?: string): string | undefined => {
+  if (!url) return url;
+  // Handle any variations including lead-in prefixes or missing leading slashes
+  return url
+    .replace(/^(\.\.\/)?(src\/)?(assets\/images\/)/, '/images/')
+    .replace(/^\/?assets\/images\//, '/images/');
+};
+
+const fixDestinationImages = (dest: Destination): Destination => {
+  return {
+    ...dest,
+    imageUrl: fixImageUrl(dest.imageUrl),
+    gallery: dest.gallery ? dest.gallery.map(g => fixImageUrl(g)!) : undefined
+  };
+};
+
+const fixPackageImages = (pkg: Package): Package => {
+  return {
+    ...pkg,
+    imageUrl: fixImageUrl(pkg.imageUrl)
+  };
+};
+
 // --- Destination Data Services ---
 export const destinationService = {
   async getAll(): Promise<Destination[]> {
@@ -365,7 +388,7 @@ export const destinationService = {
       try {
         const snap = await getDocs(collection(db, 'destinations'));
         const list: Destination[] = [];
-        snap.forEach(d => list.push(d.data() as Destination));
+        snap.forEach(d => list.push(fixDestinationImages(d.data() as Destination)));
         
         // Auto pre-population seed trigger if database is empty 
         if (list.length === 0) {
@@ -376,7 +399,7 @@ export const destinationService = {
             } catch (seedErr) {
               console.warn(`Skiped writing destination seed ${d.id} to cloud due to permission rules (non-admin active write protection).`, seedErr);
             }
-            list.push(d);
+            list.push(fixDestinationImages(d));
           }
         }
         return list;
@@ -384,7 +407,8 @@ export const destinationService = {
         handleFirestoreError(err, OperationType.LIST, 'destinations');
       }
     } else {
-      return getLocalStorageData<Destination[]>(LOCAL_STORAGE_KEYS.DESTINATIONS, SEED_DESTINATIONS);
+      const offline = getLocalStorageData<Destination[]>(LOCAL_STORAGE_KEYS.DESTINATIONS, SEED_DESTINATIONS);
+      return offline.map(fixDestinationImages);
     }
   },
 
@@ -429,7 +453,7 @@ export const packageService = {
       try {
         const snap = await getDocs(collection(db, 'packages'));
         const list: Package[] = [];
-        snap.forEach(d => list.push(d.data() as Package));
+        snap.forEach(d => list.push(fixPackageImages(d.data() as Package)));
 
         // Auto pre-population seed trigger if database is empty
         if (list.length === 0) {
@@ -440,7 +464,7 @@ export const packageService = {
             } catch (seedErr) {
               console.warn(`Skiped writing package seed ${p.id} to cloud due to permission rules (non-admin active write protection).`, seedErr);
             }
-            list.push(p);
+            list.push(fixPackageImages(p));
           }
         }
         return list;
@@ -448,7 +472,8 @@ export const packageService = {
         handleFirestoreError(err, OperationType.LIST, 'packages');
       }
     } else {
-      return getLocalStorageData<Package[]>(LOCAL_STORAGE_KEYS.PACKAGES, SEED_PACKAGES);
+      const offline = getLocalStorageData<Package[]>(LOCAL_STORAGE_KEYS.PACKAGES, SEED_PACKAGES);
+      return offline.map(fixPackageImages);
     }
   },
 
