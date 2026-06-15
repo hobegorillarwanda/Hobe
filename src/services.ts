@@ -28,6 +28,9 @@ import {
 import { db, auth, isFirebaseActive, handleFirestoreError, OperationType } from './firebase';
 import { Destination, Package, Booking, UserProfile } from './types';
 import { SEED_DESTINATIONS, SEED_PACKAGES, SEED_METADATA } from './data';
+import { getAdaptiveImageUrl } from './utils/image';
+
+export { getAdaptiveImageUrl };
 
 // --- Local Storage Simulator Engine (Fallback) ---
 const LOCAL_STORAGE_KEYS = {
@@ -358,26 +361,18 @@ export const authService = {
   }
 };
 
-const fixImageUrl = (url?: string): string | undefined => {
-  if (!url) return url;
-  // Handle any variations including lead-in prefixes or missing leading slashes
-  return url
-    .replace(/^(\.\.\/)?(src\/)?(assets\/images\/)/, '/images/')
-    .replace(/^\/?assets\/images\//, '/images/');
-};
-
 const fixDestinationImages = (dest: Destination): Destination => {
   return {
     ...dest,
-    imageUrl: fixImageUrl(dest.imageUrl),
-    gallery: dest.gallery ? dest.gallery.map(g => fixImageUrl(g)!) : undefined
+    imageUrl: getAdaptiveImageUrl(dest.imageUrl),
+    gallery: dest.gallery ? dest.gallery.map(g => getAdaptiveImageUrl(g)) : undefined
   };
 };
 
 const fixPackageImages = (pkg: Package): Package => {
   return {
     ...pkg,
-    imageUrl: fixImageUrl(pkg.imageUrl)
+    imageUrl: getAdaptiveImageUrl(pkg.imageUrl)
   };
 };
 

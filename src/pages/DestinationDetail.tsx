@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { Destination, Package } from '../types';
 import { SEED_PACKAGES } from '../data';
+import { getAdaptiveImageUrl } from '../services';
 
 interface DestinationDetailProps {
   destination: Destination;
@@ -253,7 +254,7 @@ export default function DestinationDetail({ destination, onNavigate, onSelectCon
           <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
             <div className="relative h-[340px] md:h-[450px] w-full overflow-hidden rounded-[2.5rem] border border-forest-100 bg-forest-950 shadow-md">
               <img 
-                src={destination.gallery[activeGalleryIndex] || destination.imageUrl} 
+                src={getAdaptiveImageUrl(destination.gallery[activeGalleryIndex] || destination.imageUrl)} 
                 alt={destination.name}
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover brightness-105"
@@ -282,7 +283,7 @@ export default function DestinationDetail({ destination, onNavigate, onSelectCon
                     }`}
                   >
                     <img 
-                      src={img} 
+                      src={getAdaptiveImageUrl(img)} 
                       alt={`Sanctuary Angle ${idx + 1}`}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"

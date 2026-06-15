@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import Logo from '../components/Logo';
 import { Destination, Package } from '../types';
 import AboutSection from '../components/AboutSection';
+import { getAdaptiveImageUrl } from '../services';
 
 interface ShowcaseItem {
   id: string;
@@ -245,7 +246,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
         {/* Real Mountain Gorilla Background Image */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none">
           <img 
-            src="/images/mountain_gorilla.jpg" 
+            src={getAdaptiveImageUrl('/images/mountain_gorilla.jpg')} 
             alt="Majestic Mountain Gorilla" 
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover opacity-100 object-center brightness-110 contrast-105"
@@ -403,7 +404,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
                   {/* Photo Layer */}
                   <div className="h-60 overflow-hidden relative">
                     <img
-                      src={item.imageUrl}
+                      src={getAdaptiveImageUrl(item.imageUrl)}
                       alt={item.name}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"

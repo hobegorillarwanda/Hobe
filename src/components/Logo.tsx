@@ -1,4 +1,5 @@
 import React from 'react';
+import { getAdaptiveImageUrl } from '../services';
 
 interface LogoProps {
   size?: number | string;
@@ -11,7 +12,7 @@ export default function Logo({ size = 48, className, ...props }: LogoProps) {
 
   return (
     <img
-      src="/hobe-icon.png"
+      src={getAdaptiveImageUrl('/hobe-icon.png')}
       alt="Hobe Gorilla Rwanda Logo"
       style={{ width: dimension, height: dimension }}
       className={`object-contain ${className || ''}`}

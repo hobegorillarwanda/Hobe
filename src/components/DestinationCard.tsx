@@ -6,6 +6,7 @@
 import React from 'react';
 import { Destination } from '../types';
 import { Leaf, Eye, Compass, TreePine, Map, Tag } from 'lucide-react';
+import { getAdaptiveImageUrl } from '../services';
 
 interface DestinationCardProps {
   destination: Destination;
@@ -50,7 +51,7 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
       {destination.imageUrl && (
         <div className="absolute inset-0 z-0 overflow-hidden rounded-2xl pointer-events-none">
           <img 
-            src={destination.imageUrl} 
+            src={getAdaptiveImageUrl(destination.imageUrl)} 
             alt={destination.name}
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover opacity-35 mix-blend-multiply transition-transform duration-700 group-hover:scale-105"

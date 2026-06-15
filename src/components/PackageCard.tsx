@@ -6,6 +6,7 @@
 import React from 'react';
 import { Package } from '../types';
 import { Clock, Check, Star, Shield, ArrowRight } from 'lucide-react';
+import { getAdaptiveImageUrl } from '../services';
 
 interface PackageCardProps {
   pkg: Package;
@@ -68,7 +69,7 @@ export default function PackageCard({ pkg, onSelect, isSelected = false }: Packa
         {pkg.imageUrl && (
           <div className="w-full h-44 overflow-hidden rounded-2xl relative border border-forest-500/10 shadow-sm">
             <img 
-              src={pkg.imageUrl} 
+              src={getAdaptiveImageUrl(pkg.imageUrl)} 
               alt={pkg.title}
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"

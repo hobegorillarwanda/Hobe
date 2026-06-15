@@ -8,6 +8,7 @@ import { Compass, Search, Tag, Eye, CloudRain, Sun, Leaf, HelpCircle, X, Check, 
 import { Destination, Package } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import DestinationDetail from './DestinationDetail';
+import { getAdaptiveImageUrl } from '../services';
 
 interface DestinationsProps {
   destinations: Destination[];
@@ -268,7 +269,7 @@ export default function Destinations({ destinations, onNavigate, activeDestinati
                 {dest.imageUrl && (
                   <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                     <img 
-                      src={dest.imageUrl} 
+                      src={getAdaptiveImageUrl(dest.imageUrl)} 
                       alt={dest.name}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover opacity-70 transition-transform duration-700 group-hover:scale-105"
@@ -378,7 +379,7 @@ export default function Destinations({ destinations, onNavigate, activeDestinati
                   {activeDetailDest.imageUrl && (
                     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
                       <img 
-                        src={activeDetailDest.imageUrl} 
+                        src={getAdaptiveImageUrl(activeDetailDest.imageUrl)} 
                         alt={activeDetailDest.name}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover opacity-75"
@@ -443,7 +444,7 @@ export default function Destinations({ destinations, onNavigate, activeDestinati
                       {/* Active Preview */}
                       <div className="w-full h-64 overflow-hidden rounded-2xl relative border border-forest-100 shadow-sm bg-forest-950">
                         <img 
-                          src={activeDetailDest.gallery[activeGalleryIndex] || activeDetailDest.imageUrl} 
+                          src={getAdaptiveImageUrl(activeDetailDest.gallery[activeGalleryIndex] || activeDetailDest.imageUrl)} 
                           alt={activeDetailDest.name}
                           referrerPolicy="no-referrer"
                           className="w-full h-full object-cover transition-all duration-500"
@@ -466,8 +467,8 @@ export default function Destinations({ destinations, onNavigate, activeDestinati
                                 : 'border-transparent opacity-70 hover:opacity-100'
                             }`}
                           >
-                            <img 
-                              src={img} 
+                             <img 
+                              src={getAdaptiveImageUrl(img)} 
                               alt={`Thumbnail ${idx + 1}`}
                               referrerPolicy="no-referrer"
                               className="w-full h-full object-cover"
