@@ -198,3 +198,5 @@ export const SIGNATURE_ITINERARY = {
     }
   ]
 };
+
+// git-sync-trigger

@@ -658,3 +658,5 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
     </div>
   );
 }
+
+// git-sync-trigger
