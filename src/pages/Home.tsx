@@ -10,15 +10,6 @@ import Logo from '../components/Logo';
 import { Destination, Package } from '../types';
 import AboutSection from '../components/AboutSection';
 
-import mountainGorillaImg from '../assets/images/mountain_gorilla.jpg';
-import goldenMonkeyImg from '../assets/images/golden_monkey.jpg';
-import chimpanzeeNyungweImg from '../assets/images/chimpanzee_nyungwe.jpg';
-import akageraSafariImg from '../assets/images/akagera_safari.jpg';
-import nyungweForestImg from '../assets/images/nyungwe_forest.jpg';
-import lakeKivuSunsetImg from '../assets/images/lake_kivu_sunset.jpg';
-import twinLakesRwandaImg from '../assets/images/twin_lakes_rwanda.jpg';
-import luxuryLodgeImg from '../assets/images/luxury_lodge.jpg';
-
 interface ShowcaseItem {
   id: string;
   name: string;
@@ -34,7 +25,7 @@ const SHOWCASE_WILDLIFE: ShowcaseItem[] = [
     name: 'Mountain Gorilla Group',
     location: 'Volcanoes National Park',
     description: 'The legendary gentle giant primates nesting in high-altitude bamboo mist canopies.',
-    imageUrl: mountainGorillaImg,
+    imageUrl: '/assets/images/mountain_gorilla.jpg',
     destinationId: 'volcanoes-np'
   },
   {
@@ -42,7 +33,7 @@ const SHOWCASE_WILDLIFE: ShowcaseItem[] = [
     name: 'Golden Monkey',
     location: 'Volcanoes National Park Foothills',
     description: 'High-energy, rare bamboo-dwelling monkeys covered in dense, striking sunset orange fur.',
-    imageUrl: goldenMonkeyImg,
+    imageUrl: '/assets/images/golden_monkey.jpg',
     destinationId: 'volcanoes-np'
   },
   {
@@ -50,7 +41,7 @@ const SHOWCASE_WILDLIFE: ShowcaseItem[] = [
     name: 'Eastern Chimpanzee',
     location: 'Nyungwe & Gishwati Montane Canopy',
     description: 'Intelligent, deeply expressive social primate communities swinging in rich tree crowns.',
-    imageUrl: chimpanzeeNyungweImg,
+    imageUrl: '/assets/images/chimpanzee_nyungwe.jpg',
     destinationId: 'nyungwe-np'
   },
   {
@@ -58,7 +49,7 @@ const SHOWCASE_WILDLIFE: ShowcaseItem[] = [
     name: 'Savanna Giants (Elephants)',
     location: 'Akagera National Park',
     description: 'Ancient, majestic family herds roaming lakeside woodlands alongside zebras and rhinos.',
-    imageUrl: akageraSafariImg,
+    imageUrl: '/assets/images/akagera_safari.jpg',
     destinationId: 'akagera-np'
   }
 ];
@@ -69,7 +60,7 @@ const SHOWCASE_PLACES: ShowcaseItem[] = [
     name: 'Nyungwe Canopy Walkway',
     location: 'Southwestern Rainforest',
     description: 'A spectacular steel suspension bridge high above ancient dense tree crowns.',
-    imageUrl: nyungweForestImg,
+    imageUrl: '/assets/images/nyungwe_forest.jpg',
     destinationId: 'nyungwe-np'
   },
   {
@@ -77,7 +68,7 @@ const SHOWCASE_PLACES: ShowcaseItem[] = [
     name: 'Lake Kivu Horizon',
     location: 'Rubavu & Karongi Coastline',
     description: 'Speckled volcanic lakeside beaches where traditional three-hulled fishing boats chant at sunset.',
-    imageUrl: lakeKivuSunsetImg,
+    imageUrl: '/assets/images/lake_kivu_sunset.jpg',
     destinationId: 'volcanoes-np'
   },
   {
@@ -85,7 +76,7 @@ const SHOWCASE_PLACES: ShowcaseItem[] = [
     name: 'Misty Twin Lakes',
     location: 'Burera & Ruhondo Hills',
     description: 'Vibrant volcanic water craters cradled softly under rolling emerald-green terraced farms.',
-    imageUrl: twinLakesRwandaImg,
+    imageUrl: '/assets/images/twin_lakes_rwanda.jpg',
     destinationId: 'volcanoes-np'
   },
   {
@@ -93,7 +84,7 @@ const SHOWCASE_PLACES: ShowcaseItem[] = [
     name: 'Wilderness Eco-Lodge',
     location: 'Sabyinyo Foothills',
     description: 'Stunning luxury volcanic stone cottages designed sustainably around mist-covered peaks.',
-    imageUrl: luxuryLodgeImg,
+    imageUrl: '/assets/images/luxury_lodge.jpg',
     destinationId: 'volcanoes-np'
   }
 ];
@@ -254,7 +245,7 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
         {/* Real Mountain Gorilla Background Image */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none">
           <img 
-            src={mountainGorillaImg} 
+            src="/assets/images/mountain_gorilla.jpg" 
             alt="Majestic Mountain Gorilla" 
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover opacity-100 object-center brightness-110 contrast-105"
