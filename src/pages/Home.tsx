@@ -246,8 +246,8 @@ export default function Home({ destinations, packages, onNavigate, onSelectPacka
         {/* Real Mountain Gorilla Background Image */}
         <div className="absolute inset-0 z-0 select-none pointer-events-none">
           <img 
-            src={getAdaptiveImageUrl('/images/mountain_gorilla.jpg')} 
-            alt="Majestic Mountain Gorilla" 
+            src={getAdaptiveImageUrl('/images/hello.jpg')}
+            alt="Hobe Gorilla Rwanda Hero" 
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover opacity-100 object-center brightness-110 contrast-105"
           />
