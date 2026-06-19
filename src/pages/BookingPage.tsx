@@ -128,6 +128,8 @@ export default function BookingPage({
 
     // Intercept guest submit: Firestore rules require request.auth != null.
     if (!currentUser) {
+      // Let App know we should redirect back to the booking flow after login.
+      localStorage.setItem('hobe_pending_post_login_route', 'booking');
       setPendingGuestSubmit(true);
       setShowAuthIntercept(true);
       return;

@@ -428,6 +428,15 @@ export default function App() {
         onSuccess={(authenticatedUser) => {
           if (authenticatedUser && authenticatedUser.role === 'admin') {
             handleNavigateWithScroll('admin');
+            return;
+          }
+          // Normal users: if they came from the booking flow, keep them there; otherwise send to bookings hub.
+          const pendingRoute = localStorage.getItem('hobe_pending_post_login_route');
+          if (pendingRoute === 'booking') {
+            localStorage.removeItem('hobe_pending_post_login_route');
+            handleNavigateWithScroll('booking');
+          } else {
+            handleNavigateWithScroll('bookings-hub');
           }
         }}
       />
