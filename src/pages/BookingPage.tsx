@@ -45,6 +45,10 @@ export default function BookingPage({
   const [successBooking, setSuccessBooking] = useState<Booking | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Intercept unauthenticated guest submit
+  const [showAuthIntercept, setShowAuthIntercept] = useState(false);
+  const [pendingGuestSubmit, setPendingGuestSubmit] = useState(false);
+
   // Sync state with preconfigured setup from Calculator
   useEffect(() => {
     if (configuredSetup) {
@@ -122,14 +126,19 @@ export default function BookingPage({
     e?.preventDefault();
     setError('');
 
+    // Intercept guest submit: Firestore rules require request.auth != null.
+    if (!currentUser) {
+      setPendingGuestSubmit(true);
+      setShowAuthIntercept(true);
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const requestsWithSetup = specialRequests;
 
-      const assignedUserId = currentUser?.uid || 'guest';
-
       const result = await bookingService.create({
-        userId: assignedUserId,
+        userId: currentUser.uid,
         fullName,
         email,
         phone,
@@ -140,10 +149,6 @@ export default function BookingPage({
         packageName: activePackage.title,
         totalCost: finalTotalCost
       });
-
-      if (!currentUser) {
-        localStorage.setItem('hobe_pending_guest_booking_id', result.id);
-      }
 
       setSuccessBooking(result);
       setStep(4);
@@ -564,6 +569,23 @@ export default function BookingPage({
         )}
 
       </div>
+
+      <AuthModal
+        isOpen={showAuthIntercept}
+        onClose={() => {
+          setShowAuthIntercept(false);
+          setPendingGuestSubmit(false);
+        }}
+        onSuccess={() => {
+          // User is now authenticated; proceed with the blocked booking submit.
+          setShowAuthIntercept(false);
+          setError('');
+          setPendingGuestSubmit(false);
+          handleFinalSubmit();
+        }}
+        initialMode="register"
+      />
+
 
     </div>
   );
