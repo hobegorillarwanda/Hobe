@@ -946,7 +946,7 @@ export default function DestinationDetail({ destination, onNavigate, onSelectCon
               onClick={handleConfirmCustomization}
               className="w-full py-4 bg-sand-600 hover:bg-sand-700 text-forest-950 font-extrabold rounded-xl text-xs uppercase tracking-wider text-center transition cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.01]"
             >
-              <Sparkles className="w-4 h-4 shrink-0 fill-forest-950/20" />
+              
               <span>Validate & Apply Dynamic Itinerary</span>
               <ChevronRight className="w-4 h-4" />
             </button>
