@@ -380,6 +380,10 @@ export default function App() {
                   <Phone className="w-4 h-4 text-sand-600 shrink-0" />
                   <a href="tel:+250788653917" className="hover:text-sand-100">+250 788653917</a>
                 </li>
+                <li className="flex items-center gap-2.5 font-mono">
+                  <Phone className="w-4 h-4 text-sand-600 shrink-0" />
+                  <a href="tel:+447958411023" className="hover:text-sand-100">+44 7958 411023</a>
+                </li>
 
                 <li className="flex items-center gap-2.5 font-mono">
                   <Mail className="w-4 h-4 text-sand-600 shrink-0" />
